@@ -14,33 +14,40 @@ public class GreetingController {
     @Autowired
     private UserRepo userRepo;
 
-    @GetMapping("/greeting")
-    public String greeting(
-            @RequestParam(name = "name", required = false, defaultValue = "World!") String name,
-            Model model
-    ) {
-        model.addAttribute("name", name);
+    @GetMapping("/")
+    public String greeting(Model model) {
         return "greeting";
     }
 
-    @GetMapping("/")
+    @GetMapping("/main")
     public String index(Model model) {
         Iterable<User> arg = userRepo.findAll();
 
         model.addAttribute("arg", arg);
 
-        return "index";
+        return "main";
     }
 
-    @PostMapping
-    public String addUser(@RequestParam String name, @RequestParam Integer orderId, Model model) {
-        User user = new User(name, orderId);
+    @GetMapping("/signup")
+    public String signup(Model model) {
+        Iterable<User> arg = userRepo.findAll();
+
+        model.addAttribute("arg", arg);
+
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String addUser(@RequestParam String login, @RequestParam String password,
+                          @RequestParam(defaultValue = "Holop") String role, @RequestParam String fullName,
+                          @RequestParam String phone, @RequestParam String address, Model model) {
+        User user = new User(login, password, role, fullName, phone, address);
         userRepo.save(user);
 
         Iterable<User> arg = userRepo.findAll();
 
         model.addAttribute("arg", arg);
 
-        return "index";
+        return "signup";
     }
 }
