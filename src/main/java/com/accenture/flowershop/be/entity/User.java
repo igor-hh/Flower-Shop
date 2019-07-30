@@ -1,40 +1,52 @@
 package com.accenture.flowershop.be.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+    private Long id;
     private String login;
-    private String role;
+    private String password;
+    @Column(nullable = true)
+    private boolean active;
     private String fullName;
     private String phone;
     private String address;
-    private String password;
     private Integer balance = 2000;
     private Integer discount = 5;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String login, String password, String role, String fullName, String phone, String address) {
-        this.login = login;
-        this.password = password;
-        this.role = role;
-        this.fullName = fullName;
-        this.phone = phone;
-        this.address = address;
+    public boolean isActive() {
+        return active;
     }
 
-    public Integer getId() {
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -44,14 +56,6 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getFullName() {

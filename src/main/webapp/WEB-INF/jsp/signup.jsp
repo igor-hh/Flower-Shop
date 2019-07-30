@@ -4,8 +4,13 @@
 
 <html>
 <body>
+Add new user <br>
+<c:if test="${not empty message}">
+    ${message}
+</c:if>
+<br>
 <div>
-    <form:form method="post">
+    <form:form action="/signup" method="post">
         <table>
             <tr>
                 <td>Login: </td>
@@ -36,33 +41,6 @@
 <div>
     <p><a href="/">Go back</a></p>
 </div>
-<br>
-<div>Registered Users:</div>
-<div>
-    <table border="1">
-        <tr>
-            <th>id</th>
-            <th>login</th>
-            <th>password</th>
-            <th>fullName</th>
-            <th>phone</th>
-            <th>address</th>
-            <th>balance</th>
-            <th>discount</th>
-        </tr>
-        <c:forEach items="${arg}" var="arg">
-            <tr>
-                <td>${arg.id}</td>
-                <td>${arg.login}</td>
-                <td>${arg.password}</td>
-                <td>${arg.fullName}</td>
-                <td>${arg.phone}</td>
-                <td>${arg.address}</td>
-                <td>${arg.balance}</td>
-                <td>${arg.discount}</td>
-            </tr>
-        </c:forEach>
-    </table>
-</div>
+
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.accenture.flowershop;
 
+import com.accenture.flowershop.be.entity.Role;
 import com.accenture.flowershop.be.entity.User;
 import com.accenture.flowershop.be.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
+
 @Controller
-public class GreetingController {
+public class MainController {
     @Autowired
     private UserRepo userRepo;
 
@@ -29,25 +33,23 @@ public class GreetingController {
     }
 
     @GetMapping("/signup")
-    public String signup(Model model) {
-        Iterable<User> arg = userRepo.findAll();
-
-        model.addAttribute("arg", arg);
-
+    public String signup() {
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String addUser(@RequestParam String login, @RequestParam String password,
-                          @RequestParam(defaultValue = "Holop") String role, @RequestParam String fullName,
-                          @RequestParam String phone, @RequestParam String address, Model model) {
-        User user = new User(login, password, role, fullName, phone, address);
+    public String createUser (User user, Model model) {
+        User userDB = userRepo.findByLogin(user.getLogin());
+
+        if (userDB != null) {
+            model.addAttribute("message", "User exists!");
+            return "signup";
+        }
+
+        user.setActive(true);
+        user.setRoles(Collections.singleton(Role.USER));
         userRepo.save(user);
 
-        Iterable<User> arg = userRepo.findAll();
-
-        model.addAttribute("arg", arg);
-
-        return "signup";
+        return "redirect:/login";
     }
 }
