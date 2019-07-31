@@ -1,5 +1,5 @@
 package com.accenture.flowershop.be.entity;
 
-public enum Role {
+public enum UserRole {
     USER;
 }

@@ -1,22 +1,26 @@
 package com.accenture.flowershop;
 
-import com.accenture.flowershop.be.entity.Role;
+import com.accenture.flowershop.be.entity.Order;
+import com.accenture.flowershop.be.entity.UserRole;
 import com.accenture.flowershop.be.entity.User;
+import com.accenture.flowershop.be.repos.OrderRepo;
 import com.accenture.flowershop.be.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
+import java.util.Date;
 
 @Controller
 public class MainController {
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private OrderRepo orderRepo;
 
     @GetMapping("/")
     public String greeting(Model model) {
@@ -28,6 +32,16 @@ public class MainController {
         Iterable<User> arg = userRepo.findAll();
 
         model.addAttribute("arg", arg);
+
+        return "main";
+    }
+
+    @PostMapping("/main")
+    public String createOrder(Order order, Model model) {
+        order.setCreationDate(new Date());
+        order.setCloseDate(new Date());
+        order.setStatus("test created");
+        orderRepo.save(order);
 
         return "main";
     }
@@ -47,7 +61,7 @@ public class MainController {
         }
 
         user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
+        user.setRoles(Collections.singleton(UserRole.USER));
         userRepo.save(user);
 
         return "redirect:/login";

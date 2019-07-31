@@ -11,18 +11,20 @@ public class User {
     private Long id;
     private String login;
     private String password;
+
     @Column(nullable = true)
     private boolean active;
+
     private String fullName;
     private String phone;
     private String address;
-    private Integer balance = 2000;
+    private Double balance = 2000.0;
     private Integer discount = 5;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles;
+    private Set<UserRole> roles;
 
     public User() {
     }
@@ -34,11 +36,11 @@ public class User {
     public void setActive(boolean active) {
         this.active = active;
     }
-    public Set<Role> getRoles() {
+    public Set<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
 
@@ -90,11 +92,11 @@ public class User {
         this.password = password;
     }
 
-    public Integer getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
