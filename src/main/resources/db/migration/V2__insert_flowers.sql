@@ -1,0 +1,9 @@
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Violet', '15', '130');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Anemone', '15.95', '20');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Gladiolus', '19.95', '50');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Larkspur', '5.95', '70');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Magnolia', '25', '80');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Narcissus', '12', '90');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Orchid', '9.95', '50');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Tulip', '15.95', '100');
+INSERT INTO flowers ("name", "price", "quantity") VALUES ('Rose', '15.95', '150');

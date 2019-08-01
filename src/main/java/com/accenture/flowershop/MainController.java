@@ -1,8 +1,10 @@
 package com.accenture.flowershop;
 
+import com.accenture.flowershop.be.entity.Flower;
 import com.accenture.flowershop.be.entity.Order;
 import com.accenture.flowershop.be.entity.UserRole;
 import com.accenture.flowershop.be.entity.User;
+import com.accenture.flowershop.be.repos.FlowerRepo;
 import com.accenture.flowershop.be.repos.OrderRepo;
 import com.accenture.flowershop.be.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -22,16 +26,36 @@ public class MainController {
     @Autowired
     private OrderRepo orderRepo;
 
+    @Autowired
+    private FlowerRepo flowerRepo;
+
     @GetMapping("/")
-    public String greeting(Model model) {
-        return "greeting";
+    public String indexPage(Model model) {
+        Iterable<Flower> flowers = flowerRepo.findAll();
+
+        model.addAttribute("flowers", flowers);
+
+        return "index";
+    }
+
+    @PostMapping("find")
+    public String findFlowers(@RequestParam String find, Model model) {
+        Iterable<Flower> flowers = flowerRepo.findByNameIgnoreCaseContaining(find);
+
+        if(find == "") {
+            flowers = flowerRepo.findAll();
+        }
+
+        model.addAttribute("flowers", flowers);
+
+        return "index";
     }
 
     @GetMapping("/main")
-    public String index(Model model) {
-        Iterable<User> arg = userRepo.findAll();
+    public String mainPage(Model model) {
+        Iterable<User> users = userRepo.findAll();
 
-        model.addAttribute("arg", arg);
+        model.addAttribute("users", users);
 
         return "main";
     }

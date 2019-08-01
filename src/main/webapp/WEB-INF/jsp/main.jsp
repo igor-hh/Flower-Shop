@@ -25,16 +25,16 @@
             <th>balance</th>
             <th>discount</th>
         </tr>
-        <c:forEach items="${arg}" var="arg">
+        <c:forEach items="${users}" var="users">
             <tr>
-                <td>${arg.id}</td>
-                <td>${arg.login}</td>
-                <td>${arg.password}</td>
-                <td>${arg.fullName}</td>
-                <td>${arg.phone}</td>
-                <td>${arg.address}</td>
-                <td>${arg.balance}</td>
-                <td>${arg.discount}</td>
+                <td>${users.id}</td>
+                <td>${users.login}</td>
+                <td>${users.password}</td>
+                <td>${users.fullName}</td>
+                <td>${users.phone}</td>
+                <td>${users.address}</td>
+                <td>${users.balance}</td>
+                <td>${users.discount}</td>
             </tr>
         </c:forEach>
     </table>
