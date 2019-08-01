@@ -30,26 +30,59 @@ public class MainController {
     private FlowerRepo flowerRepo;
 
     @GetMapping("/")
-    public String indexPage(Model model) {
-        Iterable<Flower> flowers = flowerRepo.findAll();
+    public String indexPage(@RequestParam(required = false) String findString,
+                            @RequestParam(required = false) Double priceFrom,
+                            @RequestParam(required = false) Double priceTo,
+                            Model model) {
+        //Iterable<Flower> flowers = flowerRepo.findAll();
+        Iterable<Flower> flowers;
 
-        model.addAttribute("flowers", flowers);
+        if(priceFrom == null) {
+            priceFrom = Double.MIN_VALUE;
+        }
+        if(priceTo == null) {
+            priceTo = Double.MAX_VALUE;
+        }
+        if(findString == null || findString.isEmpty() == true) {
+            flowers = flowerRepo.findByPriceBetween(priceFrom, priceTo);
+        } else {
+            flowers = flowerRepo.findByNameIgnoreCaseContainingAndPriceBetween(findString, priceFrom, priceTo);
+        }
 
-        return "index";
-    }
-
-    @PostMapping("find")
-    public String findFlowers(@RequestParam String find, Model model) {
-        Iterable<Flower> flowers = flowerRepo.findByNameIgnoreCaseContaining(find);
-
-        if(find == "") {
-            flowers = flowerRepo.findAll();
+        if(priceFrom == Double.MIN_VALUE) {
+            priceFrom = null;
+        }
+        if(priceTo == Double.MAX_VALUE) {
+            priceTo = null;
         }
 
         model.addAttribute("flowers", flowers);
+        model.addAttribute("findString", findString);
+        model.addAttribute("priceFrom", priceFrom);
+        model.addAttribute("priceTo", priceTo);
 
         return "index";
     }
+
+//    @PostMapping("find")
+//    public String findFlowers(@RequestParam String find, @RequestParam Double priceFrom, @RequestParam Double priceTo, Model model) {
+//        Iterable<Flower> flowers;
+//        if(priceFrom == null) {
+//            priceFrom = Double.MIN_VALUE;
+//        }
+//        if(priceTo == null) {
+//            priceTo = Double.MAX_VALUE;
+//        }
+//        if(find == null || find.isEmpty() == true) {
+//            flowers = flowerRepo.findAll();
+//        } else {
+//            flowers = flowerRepo.findByNameIgnoreCaseContainingAndPriceBetween(find, priceFrom, priceTo);
+//        }
+//
+//        model.addAttribute("flowers", flowers);
+//
+//        return "index";
+//    }
 
     @GetMapping("/main")
     public String mainPage(Model model) {

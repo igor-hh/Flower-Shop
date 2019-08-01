@@ -10,8 +10,10 @@
     <p><a href="/main">Main Page</a></p>
 
     <div>
-        <form:form method="post" action="find">
-            <input type="text" name="find" />
+        <form:form method="get" action="/">
+            <input type="text" name="findString" placeholder="Flower name" value="${findString}"/>
+            <input type="number" step="0.01" name="priceFrom"placeholder="Price from" value="${priceFrom}" style="width: 80px" />
+            <input type="number" step="0.01" name="priceTo" placeholder="Price to" value="${priceTo}" style="width: 80px" />
             <button type="submit">Find flower</button>
         </form:form>
     </div>
