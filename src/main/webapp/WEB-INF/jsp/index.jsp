@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <title>Getting Started: Serving Web Content</title>
+    <title>Flower shop</title>
 </head>
 <body>
     <h1>Greetings, User!</h1>
@@ -39,6 +39,9 @@
             </tr>
         </c:forEach>
     </table>
+    <div>
+        <p><a href="/cart">Cart</a></p>
+    </div>
 </div>
 </body>
 </html>

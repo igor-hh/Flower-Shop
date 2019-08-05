@@ -7,6 +7,7 @@ import com.accenture.flowershop.be.entity.User;
 import com.accenture.flowershop.be.repos.FlowerRepo;
 import com.accenture.flowershop.be.repos.OrderRepo;
 import com.accenture.flowershop.be.repos.UserRepo;
+import com.accenture.flowershop.be.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 @Controller
 public class MainController {
@@ -29,12 +29,14 @@ public class MainController {
     @Autowired
     private FlowerRepo flowerRepo;
 
+    @Autowired
+    CartService cart;
+
     @GetMapping("/")
     public String indexPage(@RequestParam(required = false) String findString,
                             @RequestParam(required = false) Double priceFrom,
                             @RequestParam(required = false) Double priceTo,
                             Model model) {
-        //Iterable<Flower> flowers = flowerRepo.findAll();
         Iterable<Flower> flowers;
 
         if(priceFrom == null) {
@@ -63,26 +65,6 @@ public class MainController {
 
         return "index";
     }
-
-//    @PostMapping("find")
-//    public String findFlowers(@RequestParam String find, @RequestParam Double priceFrom, @RequestParam Double priceTo, Model model) {
-//        Iterable<Flower> flowers;
-//        if(priceFrom == null) {
-//            priceFrom = Double.MIN_VALUE;
-//        }
-//        if(priceTo == null) {
-//            priceTo = Double.MAX_VALUE;
-//        }
-//        if(find == null || find.isEmpty() == true) {
-//            flowers = flowerRepo.findAll();
-//        } else {
-//            flowers = flowerRepo.findByNameIgnoreCaseContainingAndPriceBetween(find, priceFrom, priceTo);
-//        }
-//
-//        model.addAttribute("flowers", flowers);
-//
-//        return "index";
-//    }
 
     @GetMapping("/main")
     public String mainPage(Model model) {
@@ -122,5 +104,26 @@ public class MainController {
         userRepo.save(user);
 
         return "redirect:/login";
+    }
+
+    @GetMapping("/cart")
+    public String showCart(Model model) {
+        cart.getFlowersInCart().clear();
+        cart.addFlower(flowerRepo.findByName("Rose"), 1);
+        cart.addFlower(flowerRepo.findByName("Tulip"), 2);
+        cart.addFlower(flowerRepo.findByName("Narcissus"), 3);
+
+        model.addAttribute("flowersInCart", cart.getFlowersInCart());
+        return "cart";
+    }
+
+    @GetMapping("/order")
+    public String orderList(Model model) {
+
+        Iterable<Order> orders = orderRepo.findAll();
+
+        model.addAttribute("orders", orders);
+
+        return "order";
     }
 }

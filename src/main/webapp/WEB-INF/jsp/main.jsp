@@ -7,8 +7,8 @@
 <body>
 <div>
     <form:form action="/main" method="post">
-    Create test order: <input type="text" name="totalPrice" placeholder="total price" />
-    <button type="submit">Create order</button>
+        Create test order: <input type="text" name="totalPrice" placeholder="total price" />
+        <button type="submit">Create order</button>
     </form:form>
 </div>
 
