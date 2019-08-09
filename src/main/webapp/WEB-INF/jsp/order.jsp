@@ -15,6 +15,7 @@
             <th>Close Date</th>
             <th>Total Price</th>
             <th>Status</th>
+            <th>Owner id</th>
         </tr>
     <c:forEach items="${orders}" var="orders">
         <tr>
@@ -23,8 +24,13 @@
             <td>${orders.closeDate}</td>
             <td>${orders.totalPrice}</td>
             <td>${orders.status}</td>
+            <td>${orders.owner.getLogin()}</td>
         </tr>
     </c:forEach>
     </table>
 </div>
+<div>
+    <a href="/">Continue Shopping</a>
+</div>
 </body>
+</html>

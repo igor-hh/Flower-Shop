@@ -11,4 +11,6 @@ public interface CartService {
     void removeFlower(Flower flower);
 
     Map<Flower, Integer> getFlowersInCart();
+
+    Double getTotalPrice();
 }

@@ -1,5 +1,5 @@
-//package com.accenture.flowershop.be.entity;
-//
-//public enum OrderStatus {
-//    CREATED, PAID, CLOSED;
-//}
+package com.accenture.flowershop.be.entity;
+
+public enum OrderStatus {
+    CREATED, PAID, CLOSED;
+}

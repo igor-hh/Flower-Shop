@@ -1,6 +1,7 @@
 package com.accenture.flowershop.be.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "flowers")
@@ -47,5 +48,19 @@ public class Flower {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    //hashCode and equals override to be able to use Map containsKey(Flower)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Flower flower = (Flower) o;
+        return Objects.equals(id, flower.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

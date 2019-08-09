@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface FlowerRepo extends CrudRepository<Flower, Long> {
-    //find flowers by name containing input, case insensitive and by price range from-to
+    //find flowers by name containing input and by price range from-to, case insensitive
     List<Flower> findByNameIgnoreCaseContainingAndPriceBetween(String name, Double priceFrom, Double priceTo);
     List<Flower> findByPriceBetween(Double priceFrom, Double priceTo);
     Flower findByName(String name);

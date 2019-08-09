@@ -8,7 +8,9 @@ import com.accenture.flowershop.be.repos.FlowerRepo;
 import com.accenture.flowershop.be.repos.OrderRepo;
 import com.accenture.flowershop.be.repos.UserRepo;
 import com.accenture.flowershop.be.service.CartService;
+import com.accenture.flowershop.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +24,14 @@ import java.util.Date;
 public class MainController {
     @Autowired
     private UserRepo userRepo;
-
     @Autowired
     private OrderRepo orderRepo;
-
     @Autowired
     private FlowerRepo flowerRepo;
-
     @Autowired
-    CartService cart;
+    private CartService cart;
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/")
     public String indexPage(@RequestParam(required = false) String findString,
@@ -45,7 +46,7 @@ public class MainController {
         if(priceTo == null) {
             priceTo = Double.MAX_VALUE;
         }
-        if(findString == null || findString.isEmpty() == true) {
+        if(findString == null || findString.isEmpty()) {
             flowers = flowerRepo.findByPriceBetween(priceFrom, priceTo);
         } else {
             flowers = flowerRepo.findByNameIgnoreCaseContainingAndPriceBetween(findString, priceFrom, priceTo);
@@ -76,10 +77,10 @@ public class MainController {
     }
 
     @PostMapping("/main")
-    public String createOrder(Order order, Model model) {
+    public String createOrder(@AuthenticationPrincipal User user, Order order, Model model) {
         order.setCreationDate(new Date());
-        order.setCloseDate(new Date());
         order.setStatus("test created");
+        order.setOwner(user);
         orderRepo.save(order);
 
         return "main";
@@ -108,13 +109,18 @@ public class MainController {
 
     @GetMapping("/cart")
     public String showCart(Model model) {
-        cart.getFlowersInCart().clear();
-        cart.addFlower(flowerRepo.findByName("Rose"), 1);
-        cart.addFlower(flowerRepo.findByName("Tulip"), 2);
-        cart.addFlower(flowerRepo.findByName("Narcissus"), 3);
 
         model.addAttribute("flowersInCart", cart.getFlowersInCart());
         return "cart";
+    }
+
+    @PostMapping("/cart")
+    public String addToCart(Flower flowerInCart, Integer cartQuantity, Model model) {
+        Flower flower = flowerRepo.findByName(flowerInCart.getName());
+
+        cart.addFlower(flower, cartQuantity);
+
+        return "redirect:/cart";
     }
 
     @GetMapping("/order")
@@ -125,5 +131,18 @@ public class MainController {
         model.addAttribute("orders", orders);
 
         return "order";
+    }
+
+    @PostMapping("/order")
+    public String createOrder(Model model) {
+
+        //todo: if cart is empty hide Create Order button or show message that cart is empty
+        if(cart.getFlowersInCart().isEmpty()) {
+            return "redirect:/order";
+        }
+
+        orderService.createOrderFromCart(cart);
+
+        return "redirect:/order";
     }
 }

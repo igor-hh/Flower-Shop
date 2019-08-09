@@ -19,6 +19,7 @@
     </div>
 <div>Flowers List:</div>
 <div>
+
     <table border="1">
         <tr>
             <th>id</th>
@@ -28,17 +29,23 @@
             <th>Enter quantity</th>
             <th>Cart</th>
         </tr>
+
         <c:forEach items="${flowers}" var="flowers">
+            <form:form method="post" action="/cart">
             <tr>
                 <td>${flowers.id}</td>
                 <td>${flowers.name}</td>
                 <td>${flowers.price}</td>
                 <td>${flowers.quantity}</td>
-                <td><input type="text" name="quantity" value="${flowers.quantity}" /></td>
+                <td><input type="text" name="cartQuantity"  value="${flowers.quantity}" /></td>
+                <input type="hidden" name="name" value="${flowers.name}" />
                 <td><button type="submit">Add to cart</button></td>
             </tr>
+            </form:form>
         </c:forEach>
+
     </table>
+
     <div>
         <p><a href="/cart">Cart</a></p>
     </div>
