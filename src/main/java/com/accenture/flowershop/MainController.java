@@ -2,14 +2,15 @@ package com.accenture.flowershop;
 
 import com.accenture.flowershop.be.entity.Flower;
 import com.accenture.flowershop.be.entity.Order;
-import com.accenture.flowershop.be.entity.UserRole;
+import com.accenture.flowershop.be.entity.OrderStatus;
 import com.accenture.flowershop.be.entity.User;
 import com.accenture.flowershop.be.repos.FlowerRepo;
 import com.accenture.flowershop.be.repos.OrderRepo;
-import com.accenture.flowershop.be.repos.UserRepo;
 import com.accenture.flowershop.be.service.CartService;
 import com.accenture.flowershop.be.service.OrderService;
+import com.accenture.flowershop.be.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
-import java.util.Date;
+import java.util.Collection;
 
 @Controller
 public class MainController {
     @Autowired
-    private UserRepo userRepo;
+    private UserService userService;
     @Autowired
     private OrderRepo orderRepo;
     @Autowired
@@ -67,25 +67,6 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/main")
-    public String mainPage(Model model) {
-        Iterable<User> users = userRepo.findAll();
-
-        model.addAttribute("users", users);
-
-        return "main";
-    }
-
-    @PostMapping("/main")
-    public String createOrder(@AuthenticationPrincipal User user, Order order, Model model) {
-        order.setCreationDate(new Date());
-        order.setStatus("test created");
-        order.setOwner(user);
-        orderRepo.save(order);
-
-        return "main";
-    }
-
     @GetMapping("/signup")
     public String signup() {
         return "signup";
@@ -93,23 +74,36 @@ public class MainController {
 
     @PostMapping("/signup")
     public String createUser (User user, Model model) {
-        User userDB = userRepo.findByLogin(user.getLogin());
 
-        if (userDB != null) {
-            model.addAttribute("message", "User exists!");
+        if(user.getPassword() != null && !user.getPassword().equals(user.getPassword2())) {
+            model.addAttribute("passwordError", "Passwords must me equal");
             return "signup";
         }
 
-        user.setActive(true);
-        user.setRoles(Collections.singleton(UserRole.USER));
-        userRepo.save(user);
+        if (!userService.addUser(user)) {
+            model.addAttribute("userError", "User " + user.getLogin() + " already exists!");
+            return "signup";
+        }
 
         return "redirect:/login";
     }
 
+    @GetMapping("/login")
+    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+        if(error != null) {
+            model.addAttribute("loginError", "Your login attempt was not successful, try again.");
+        }
+        return "login";
+    }
+
     @GetMapping("/cart")
     public String showCart(Model model) {
+        if(cart.getFlowersInCart().isEmpty()) {
+            model.addAttribute("cartEmpty", "Your cart is empty.");
+            return "cart";
+        }
 
+        model.addAttribute("cart", cart);
         model.addAttribute("flowersInCart", cart.getFlowersInCart());
         return "cart";
     }
@@ -123,10 +117,24 @@ public class MainController {
         return "redirect:/cart";
     }
 
-    @GetMapping("/order")
-    public String orderList(Model model) {
+    @PostMapping("/cart/remove")
+    public String removeFromCart(Flower flowerInCart, Model model) {
+        Flower flower = flowerRepo.findByName(flowerInCart.getName());
 
-        Iterable<Order> orders = orderRepo.findAll();
+        cart.removeFlower(flower);
+
+        return"redirect:/cart";
+    }
+
+    @GetMapping("/order")
+    public String orderList(@AuthenticationPrincipal User user, Model model) {
+
+        Iterable<Order> orders = orderRepo.findByOwner(user);
+
+        if(orderRepo.findByOwner(user).size() == 0) {
+            model.addAttribute("ordersEmpty", "You have no orders :(");
+            return "order";
+        }
 
         model.addAttribute("orders", orders);
 
@@ -144,5 +152,49 @@ public class MainController {
         orderService.createOrderFromCart(cart);
 
         return "redirect:/order";
+    }
+
+    @PostMapping("/order/pay")
+    public String payOrder(Order orderToPay, Model model) {
+        Order order = orderRepo.findById(orderToPay.getId()).orElse(null);
+        if(order.getStatus().equals(OrderStatus.PAID.name()) || order.getStatus().equals(OrderStatus.CLOSED.name())) {
+            //todo: check if order is paid or closed already
+            System.out.println("order is already paid");
+        }
+        orderService.payOrder(order);
+
+        return "redirect:/order";
+    }
+
+    @GetMapping("/manageOrders")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String manageOrderList(Model model) {
+
+        Iterable<Order> orders = orderRepo.findByStatus(OrderStatus.PAID.name());
+
+        if(orderRepo.findByStatus(OrderStatus.PAID.name()).size() == 0) {
+            model.addAttribute("ordersEmpty", "No paid orders to display");
+            return "manageOrders";
+        }
+
+        model.addAttribute("orders", orders);
+
+        return "manageOrders";
+    }
+
+    @PostMapping("/manageOrders")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String closeOrder(Order orderToClose, Model model) {
+        Order order = orderRepo.findById(orderToClose.getId()).orElse(null);
+
+        orderService.closeOrder(order);
+
+        return "redirect:/manageOrders";
+    }
+
+    @GetMapping("/403")
+    public String accessDenied() {
+
+        return "403";
     }
 }

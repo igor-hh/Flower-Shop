@@ -12,5 +12,7 @@ public interface CartService {
 
     Map<Flower, Integer> getFlowersInCart();
 
+    Double getItemPrice(String name);
+
     Double getTotalPrice();
 }

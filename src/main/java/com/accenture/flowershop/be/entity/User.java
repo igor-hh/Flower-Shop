@@ -15,21 +15,26 @@ public class User implements UserDetails {
     private Long id;
     private String login;
     private String password;
-
-    @Column(nullable = true)
-    private boolean active;
-
+    @Transient
+    private String password2;
     private String fullName;
     private String phone;
     private String address;
-    private Double balance = 2000.0;
-    private Integer discount = 5;
+    @Column(nullable = true)
+    private boolean active;
+    private Double balance;
+    private Integer discount;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
 
+    @PrePersist
+    public void prePersist() {
+        setBalance(2000.0);
+        setDiscount(5);
+    }
     public User() {
     }
 
@@ -140,5 +145,13 @@ public class User implements UserDetails {
 
     public void setDiscount(Integer discount) {
         this.discount = discount;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 }

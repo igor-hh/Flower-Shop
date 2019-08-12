@@ -1,7 +1,9 @@
 package com.accenture.flowershop.be.service;
 
-import com.accenture.flowershop.be.entity.User;
+import com.accenture.flowershop.be.entity.Order;
 
 public interface OrderService {
-    public void createOrderFromCart(CartService cart);
+    void createOrderFromCart(CartService cart);
+    void payOrder(Order order);
+    void closeOrder(Order order);
 }

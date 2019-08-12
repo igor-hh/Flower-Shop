@@ -1,54 +1,78 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<jsp:include page="fragments/header.jsp"/>
 
 <html>
 <head>
     <title>Flower shop</title>
 </head>
 <body>
-    <h1>Greetings, User!</h1>
-    <p><a href="/main">Main Page</a></p>
+<div class="container">
 
-    <div>
+    <jsp:include page="fragments/navbar.jsp"/>
+
+    <div class="row mt-3 ml-0">
         <form:form method="get" action="/">
-            <input type="text" name="findString" placeholder="Flower name" value="${findString}"/>
-            <input type="number" step="0.01" name="priceFrom"placeholder="Price from" value="${priceFrom}" style="width: 80px" />
-            <input type="number" step="0.01" name="priceTo" placeholder="Price to" value="${priceTo}" style="width: 80px" />
-            <button type="submit">Find flower</button>
+            <div class="input-group input-group-sm">
+                <input class="form-control bg-light text-dark" type="text" name="findString" placeholder="Flower name" value="${findString}">
+                <input class="form-control bg-light text-dark ml-1" type="number" step="0.01" name="priceFrom" placeholder="Price from" value="${priceFrom}">
+                <input class="form-control bg-light text-dark ml-1" type="number" step="0.01" name="priceTo" placeholder="Price to" value="${priceTo}">
+                <button type="submit" class="btn btn-secondary btn-sm ml-1">Find flowers</button>
+            </div>
         </form:form>
     </div>
-<div>Flowers List:</div>
-<div>
-
-    <table border="1">
-        <tr>
-            <th>id</th>
-            <th>name</th>
-            <th>price</th>
-            <th>Available quantity</th>
-            <th>Enter quantity</th>
-            <th>Cart</th>
-        </tr>
-
-        <c:forEach items="${flowers}" var="flowers">
-            <form:form method="post" action="/cart">
+    <div class="row mt-0 ml-0">
+        <table class="table table-hover">
             <tr>
-                <td>${flowers.id}</td>
-                <td>${flowers.name}</td>
-                <td>${flowers.price}</td>
-                <td>${flowers.quantity}</td>
-                <td><input type="text" name="cartQuantity"  value="${flowers.quantity}" /></td>
-                <input type="hidden" name="name" value="${flowers.name}" />
-                <td><button type="submit">Add to cart</button></td>
+                <th scope="col">Flower</th>
+                <th scope="col">Price per unit</th>
+                <th scope="col">Available quantity</th>
+                <sec:authorize access="isAuthenticated()">
+                    <th scope="col">Quantity to buy</th>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <th scope="col">Cart</th>
+                </sec:authorize>
             </tr>
-            </form:form>
-        </c:forEach>
 
-    </table>
-
-    <div>
-        <p><a href="/cart">Cart</a></p>
+            <c:forEach items="${flowers}" var="flowers">
+                <form:form method="post" action="/cart">
+                    <tr>
+                        <td>${flowers.name}</td>
+                        <td>${flowers.price}</td>
+                        <c:if test="${flowers.quantity <= 0}">
+                            <td>Out of stock :(</td>
+                        </c:if>
+                        <c:if test="${flowers.quantity > 0}">
+                            <td>${flowers.quantity}</td>
+                        </c:if>
+                        <c:if test="${flowers.quantity <= 0}">
+                            <td></td>
+                        </c:if>
+                        <c:if test="${flowers.quantity > 0}">
+                            <sec:authorize access="isAuthenticated()">
+                                <td><input type="text" name="cartQuantity" value="${flowers.quantity}"/></td>
+                            </sec:authorize>
+                        </c:if>
+                        <input type="hidden" name="name" value="${flowers.name}"/>
+                        <c:if test="${flowers.quantity <= 0}">
+                            <td></td>
+                        </c:if>
+                        <c:if test="${flowers.quantity > 0}">
+                            <sec:authorize access="isAuthenticated()">
+                                <td><button type="submit" class="btn btn-success btn-sm">Add to cart</button></td>
+                            </sec:authorize>
+                        </c:if>
+                    </tr>
+                </form:form>
+            </c:forEach>
+        </table>
     </div>
+
+    <jsp:include page="fragments/footer.jsp"/>
+
 </div>
 </body>
 </html>
