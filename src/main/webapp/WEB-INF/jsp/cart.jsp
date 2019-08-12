@@ -17,10 +17,9 @@
         <p class="text-info">Add flowers to cart to buy them.</p>
     </c:if>
     <c:if test="${empty cartEmpty}">
-        <div>Flowers in cart:</div>
+        <p class="mt-3"><b>Flowers in cart:</b></p>
         <div>
-
-            <table class="table table-sm table-hover">
+            <table class="table table-sm table-hover mt-4">
                 <tr>
                     <th>Flower Name</th>
                     <th>Quantity</th>
@@ -42,7 +41,7 @@
                 </c:forEach>
             </table>
             <div>
-                <p>Total price with discount: ${cart.getTotalPrice()}</p>
+                <p>Total price with discount: <b>${cart.getTotalPrice()}</b></p>
             </div>
         </div>
         <br>

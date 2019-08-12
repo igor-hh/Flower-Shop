@@ -13,6 +13,12 @@
 
     <jsp:include page="fragments/navbar.jsp"/>
 
+    <c:if test="${not empty quantityError1}">
+        <p class="text-danger mt-3">${quantityError1}</p>
+    </c:if>
+    <c:if test="${not empty quantityError2}">
+        <p class="text-danger mt-3">${quantityError2}</p>
+    </c:if>
     <div class="row mt-3 ml-0">
         <form:form method="get" action="/">
             <div class="input-group input-group-sm">
@@ -53,7 +59,7 @@
                         </c:if>
                         <c:if test="${flowers.quantity > 0}">
                             <sec:authorize access="isAuthenticated()">
-                                <td><input type="text" name="cartQuantity" value="${flowers.quantity}"/></td>
+                                <td><input type="number" min="1" name="cartQuantity" value="${flowers.quantity}"/></td>
                             </sec:authorize>
                         </c:if>
                         <input type="hidden" name="name" value="${flowers.name}"/>

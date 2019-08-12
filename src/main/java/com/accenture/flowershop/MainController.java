@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collection;
+import java.util.Map;
+
 
 @Controller
 public class MainController {
@@ -40,22 +41,22 @@ public class MainController {
                             Model model) {
         Iterable<Flower> flowers;
 
-        if(priceFrom == null) {
+        if (priceFrom == null) {
             priceFrom = Double.MIN_VALUE;
         }
-        if(priceTo == null) {
+        if (priceTo == null) {
             priceTo = Double.MAX_VALUE;
         }
-        if(findString == null || findString.isEmpty()) {
-            flowers = flowerRepo.findByPriceBetween(priceFrom, priceTo);
+        if (findString == null || findString.isEmpty()) {
+            flowers = flowerRepo.findByPriceBetweenOrderByNameAsc(priceFrom, priceTo);
         } else {
-            flowers = flowerRepo.findByNameIgnoreCaseContainingAndPriceBetween(findString, priceFrom, priceTo);
+            flowers = flowerRepo.findByNameIgnoreCaseContainingAndPriceBetweenOrderByNameAsc(findString, priceFrom, priceTo);
         }
 
-        if(priceFrom == Double.MIN_VALUE) {
+        if (priceFrom == Double.MIN_VALUE) {
             priceFrom = null;
         }
-        if(priceTo == Double.MAX_VALUE) {
+        if (priceTo == Double.MAX_VALUE) {
             priceTo = null;
         }
 
@@ -73,9 +74,9 @@ public class MainController {
     }
 
     @PostMapping("/signup")
-    public String createUser (User user, Model model) {
+    public String createUser(User user, Model model) {
 
-        if(user.getPassword() != null && !user.getPassword().equals(user.getPassword2())) {
+        if (user.getPassword() != null && !user.getPassword().equals(user.getPassword2())) {
             model.addAttribute("passwordError", "Passwords must me equal");
             return "signup";
         }
@@ -90,7 +91,7 @@ public class MainController {
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
-        if(error != null) {
+        if (error != null) {
             model.addAttribute("loginError", "Your login attempt was not successful, try again.");
         }
         return "login";
@@ -98,7 +99,7 @@ public class MainController {
 
     @GetMapping("/cart")
     public String showCart(Model model) {
-        if(cart.getFlowersInCart().isEmpty()) {
+        if (cart.getFlowersInCart().isEmpty()) {
             model.addAttribute("cartEmpty", "Your cart is empty.");
             return "cart";
         }
@@ -111,6 +112,19 @@ public class MainController {
     @PostMapping("/cart")
     public String addToCart(Flower flowerInCart, Integer cartQuantity, Model model) {
         Flower flower = flowerRepo.findByName(flowerInCart.getName());
+        Map<Flower, Integer> flowersInCart = cart.getFlowersInCart();
+
+        if (flower.getQuantity() < cartQuantity) {
+            model.addAttribute("quantityError1", "Not enough flowers on stock.");
+            return "index";
+        }
+        if (flowersInCart.containsKey(flower) && (flower.getQuantity() < flowersInCart.get(flower) + cartQuantity)) {
+            model.addAttribute("quantityError2", "Not enough flower " +
+                    flower.getName() +
+                    " on stock. You already have " +
+                    flowersInCart.get(flower) + " of that flower in your cart");
+            return "index";
+        }
 
         cart.addFlower(flower, cartQuantity);
 
@@ -118,20 +132,20 @@ public class MainController {
     }
 
     @PostMapping("/cart/remove")
-    public String removeFromCart(Flower flowerInCart, Model model) {
+    public String removeFromCart(Flower flowerInCart) {
         Flower flower = flowerRepo.findByName(flowerInCart.getName());
 
         cart.removeFlower(flower);
 
-        return"redirect:/cart";
+        return "redirect:/cart";
     }
 
     @GetMapping("/order")
     public String orderList(@AuthenticationPrincipal User user, Model model) {
 
-        Iterable<Order> orders = orderRepo.findByOwner(user);
+        Iterable<Order> orders = orderRepo.findByOwnerOrderByIdAsc(user);
 
-        if(orderRepo.findByOwner(user).size() == 0) {
+        if (orderRepo.findByOwnerOrderByIdAsc(user).size() == 0) {
             model.addAttribute("ordersEmpty", "You have no orders :(");
             return "order";
         }
@@ -142,12 +156,7 @@ public class MainController {
     }
 
     @PostMapping("/order")
-    public String createOrder(Model model) {
-
-        //todo: if cart is empty hide Create Order button or show message that cart is empty
-        if(cart.getFlowersInCart().isEmpty()) {
-            return "redirect:/order";
-        }
+    public String createOrder() {
 
         orderService.createOrderFromCart(cart);
 
@@ -155,11 +164,12 @@ public class MainController {
     }
 
     @PostMapping("/order/pay")
-    public String payOrder(Order orderToPay, Model model) {
+    public String payOrder(@AuthenticationPrincipal User user, Order orderToPay, Model model) {
         Order order = orderRepo.findById(orderToPay.getId()).orElse(null);
-        if(order.getStatus().equals(OrderStatus.PAID.name()) || order.getStatus().equals(OrderStatus.CLOSED.name())) {
-            //todo: check if order is paid or closed already
-            System.out.println("order is already paid");
+        if(order.getTotalPrice() > user.getBalance()) {
+            model.addAttribute("payError", "Not enough money to pay. You " +
+                    (order.getTotalPrice() - user.getBalance()) + " balance short");
+            return "order";
         }
         orderService.payOrder(order);
 
@@ -172,7 +182,7 @@ public class MainController {
 
         Iterable<Order> orders = orderRepo.findByStatus(OrderStatus.PAID.name());
 
-        if(orderRepo.findByStatus(OrderStatus.PAID.name()).size() == 0) {
+        if (orderRepo.findByStatus(OrderStatus.PAID.name()).size() == 0) {
             model.addAttribute("ordersEmpty", "No paid orders to display");
             return "manageOrders";
         }
@@ -184,7 +194,7 @@ public class MainController {
 
     @PostMapping("/manageOrders")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String closeOrder(Order orderToClose, Model model) {
+    public String closeOrder(Order orderToClose) {
         Order order = orderRepo.findById(orderToClose.getId()).orElse(null);
 
         orderService.closeOrder(order);

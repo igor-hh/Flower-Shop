@@ -11,12 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
-
-import static java.lang.String.valueOf;
-import static net.bytebuddy.implementation.FixedValue.value;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -39,8 +35,8 @@ public class OrderServiceImpl implements OrderService {
         Integer quantity;
         Order order = new Order();
         order.setOwner(user);
-        order.setTotalPrice(cart.getTotalPrice());
         order.setStatus(OrderStatus.CREATED.name());
+        order.setTotalPrice(cart.getTotalPrice());
         orderRepo.save(order);
 
         for(Map.Entry<Flower, Integer> entry: cart.getFlowersInCart().entrySet()) {
@@ -58,12 +54,10 @@ public class OrderServiceImpl implements OrderService {
     public void payOrder(Order order) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(user.getBalance() < order.getTotalPrice()) {
-            //todo: show error message "not enough money"
-            System.out.println("Not enough money");
-        }
-
-        user.setBalance(user.getBalance() - order.getTotalPrice());
+        //round to avoid principal.balance and database values inconsistency
+        double total = user.getBalance() - order.getTotalPrice();
+        total = Math.round(total * 100.0) / 100.0;
+        user.setBalance(total);
 
         order.setStatus(OrderStatus.PAID.name());
         orderRepo.save(order);

@@ -1,5 +1,6 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <jsp:include page="fragments/header.jsp"/>
 
@@ -22,7 +23,6 @@
             <tr>
                 <th>Id</th>
                 <th>Creation Date</th>
-                <th>Close Date</th>
                 <th>Total Price</th>
                 <th>Status</th>
                 <th>Owner id</th>
@@ -32,8 +32,7 @@
                 <form:form method="post" action="/manageOrders">
                     <tr>
                         <td>${orders.id}</td>
-                        <td>${orders.creationDate}</td>
-                        <td>${orders.closeDate}</td>
+                        <td><fmt:formatDate value="${orders.creationDate}" pattern="dd.MM.yyyy HH:mm:ss" /></td>
                         <td>${orders.totalPrice}</td>
                         <td>${orders.status}</td>
                         <td>${orders.owner.getLogin()}</td>

@@ -20,7 +20,6 @@ public class User implements UserDetails {
     private String fullName;
     private String phone;
     private String address;
-    @Column(nullable = true)
     private boolean active;
     private Double balance;
     private Integer discount;

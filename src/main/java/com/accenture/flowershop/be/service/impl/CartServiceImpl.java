@@ -30,16 +30,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addFlower(Flower flower, Integer quantity) {
 
-        if(flower.getQuantity() < quantity) {
-            //todo: show error "flowers out of stock" somewhere else
-            System.out.println("Error: out of stock 1");
-        }
-
         if(flowersInCart.containsKey(flower)) {
-            if(flower.getQuantity() < flowersInCart.get(flower) + quantity) {
-                //todo: show error "flowers out of stock" can't add to cart
-                System.out.println("Error: out of stock 2");
-            }
             flowersInCart.replace(flower, flowersInCart.get(flower) + quantity);
         } else {
             flowersInCart.put(flower, quantity);

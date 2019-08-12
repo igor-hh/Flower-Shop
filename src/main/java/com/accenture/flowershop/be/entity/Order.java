@@ -13,9 +13,11 @@ public class Order {
     private Long id;
 
     private Double totalPrice;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
-
-    @Column(nullable = true)
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date closeDate;
 
     private String status;

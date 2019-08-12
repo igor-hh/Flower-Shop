@@ -10,5 +10,5 @@ public interface OrderRepo extends CrudRepository<Order, Long> {
 
     List<Order> findByStatus(String status);
 
-    List<Order> findByOwner(User owner);
+    List<Order> findByOwnerOrderByIdAsc(User owner);
 }
