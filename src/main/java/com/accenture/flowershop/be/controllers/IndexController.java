@@ -21,14 +21,13 @@ public class IndexController {
 
     @Autowired
     private FlowerService flowerService;
-    @Autowired
-    private FlowerRepo flowerRepo;
 
     @GetMapping("/")
     public String indexPage(@RequestParam(required = false) String findString,
                             @RequestParam(required = false) Double priceFrom,
                             @RequestParam(required = false) Double priceTo,
                             @ModelAttribute("cartSuccess") String cartSuccess,
+                            @ModelAttribute("addedFlower") String flowerId,
                             Model model) {
 
         List<Flower> flowers;
@@ -57,6 +56,7 @@ public class IndexController {
         model.addAttribute("priceFrom", priceFrom);
         model.addAttribute("priceTo", priceTo);
         model.addAttribute("cartSuccess", cartSuccess);
+        model.addAttribute("addedFlower", flowerId);
 
         return "index";
     }

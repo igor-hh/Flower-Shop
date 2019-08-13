@@ -43,14 +43,20 @@
                                 <td>${orders.totalPrice}</td>
                                 <td>${orders.status}</td>
                                 <input type="hidden" name="id" value="${orders.id}"/>
-                                <c:if test="${orders.status != 'CREATED'}">
-                                    <td></td>
-                                </c:if>
-                                <c:if test="${orders.status == 'CREATED'}">
-                                    <td>
-                                        <button type="submit" class="btn btn-success btn-sm">Pay</button>
-                                    </td>
-                                </c:if>
+                                <div>
+                                    <c:if test="${orders.status != 'CREATED'}">
+                                        <td>
+                                            <button type="submit" class="btn btn-secondary btn-sm btn-block" disabled>
+                                                Paid
+                                            </button>
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${orders.status == 'CREATED'}">
+                                        <td>
+                                            <button type="submit" class="btn btn-success btn-sm btn-block">Pay</button>
+                                        </td>
+                                    </c:if>
+                                </div>
                             </tr>
                         </form:form>
                     </c:forEach>

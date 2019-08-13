@@ -53,8 +53,9 @@ public class CartController {
         cartService.addFlower(flower, cartQuantity);
         redirectAttributes.addFlashAttribute("cartSuccess", "Added " +
                 cartQuantity + " " +
-                (cartQuantity > 1 ? English.plural(flower.getName()) : "") + //plural form for flower if quantity > 1
+                (cartQuantity > 1 ? English.plural(flower.getName()) : flower.getName()) + //plural form for flower if quantity > 1
                 " to cart!");
+        redirectAttributes.addFlashAttribute("addedFlower", flower.getId().toString());
 
         return "redirect:/";
     }

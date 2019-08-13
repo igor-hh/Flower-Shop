@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -21,8 +20,6 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-    @Autowired
-    private CartService cartService;
 
     @GetMapping("/order")
     public String orderList(@AuthenticationPrincipal User user, Model model) {
