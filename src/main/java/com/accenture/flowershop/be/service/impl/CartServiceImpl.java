@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +21,7 @@ import java.util.Map;
 public class CartServiceImpl implements CartService {
 
     @Autowired
-    FlowerRepo flowerRepo;
+    private FlowerRepo flowerRepo;
 
     private Map<Flower, Integer> flowersInCart;
 
@@ -48,15 +50,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Double getItemPrice(String name) {
-        Double result;
+    public BigDecimal getItemPrice(String name) {
         Flower flower = flowerRepo.findByName(name);
-        result = flower.getPrice() * flowersInCart.get(flower);
-        return result;
+
+        return flower.getPrice().multiply(new BigDecimal(flowersInCart.get(flower)));
     }
 
     @Override
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         Double total = 0.0;
         Flower flower;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -64,13 +65,11 @@ public class CartServiceImpl implements CartService {
         for(Map.Entry<Flower, Integer> entry: flowersInCart.entrySet()) {
             flower = flowerRepo.findByName(entry.getKey().getName());
             Integer quantity = entry.getValue();
-            total += flower.getPrice() * quantity;
+            total += flower.getPrice().doubleValue() * quantity;
         }
 
         total = total * ((100.0 - user.getDiscount()) / 100);
 
-        total = Math.round(total * 100.0) / 100.0;
-
-        return total;
+        return new BigDecimal(total).setScale(2, RoundingMode.CEILING);
     }
 }

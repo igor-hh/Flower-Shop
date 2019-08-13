@@ -11,24 +11,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    OrderRepo orderRepo;
+    private OrderRepo orderRepo;
     @Autowired
-    OrderItemRepo orderItemRepo;
+    private OrderItemRepo orderItemRepo;
     @Autowired
-    FlowerRepo flowerRepo;
+    private FlowerRepo flowerRepo;
     @Autowired
-    UserRepo userRepo;
+    private UserRepo userRepo;
+    @Autowired
+    private CartService cartService;
 
     @Override
-    public void createOrderFromCart(CartService cart) {
-        //get user from context
+    public Order findById(Long id) {
+        return orderRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Order> findByOwner(User user) {
+        return orderRepo.findByOwnerOrderByIdAsc(user);
+    }
+
+    @Override
+    public List<Order> findByStatus(String status) {
+        return orderRepo.findByStatus(status);
+    }
+
+    @Override
+    public void createOrderFromCart() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Flower flower;
@@ -36,30 +55,30 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setOwner(user);
         order.setStatus(OrderStatus.CREATED.name());
-        order.setTotalPrice(cart.getTotalPrice());
+        order.setTotalPrice(cartService.getTotalPrice());
         orderRepo.save(order);
 
-        for(Map.Entry<Flower, Integer> entry: cart.getFlowersInCart().entrySet()) {
+        for(Map.Entry<Flower, Integer> entry: cartService.getFlowersInCart().entrySet()) {
             flower = flowerRepo.findByName(entry.getKey().getName());
             quantity = entry.getValue();
+
             OrderItem orderItem = new OrderItem(order, flower, quantity);
             flower.setQuantity(flower.getQuantity() - quantity);
 
+            flowerRepo.save(flower);
             orderItemRepo.save(orderItem);
         }
-        cart.getFlowersInCart().clear();
+        cartService.getFlowersInCart().clear();
     }
 
     @Override
     public void payOrder(Order order) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        //round to avoid principal.balance and database values inconsistency
-        double total = user.getBalance() - order.getTotalPrice();
-        total = Math.round(total * 100.0) / 100.0;
-        user.setBalance(total);
-
+        double total = user.getBalance().doubleValue() - order.getTotalPrice().doubleValue();
+        user.setBalance(new BigDecimal(total).setScale(2, RoundingMode.CEILING));
         order.setStatus(OrderStatus.PAID.name());
+
         orderRepo.save(order);
         userRepo.save(user);
     }

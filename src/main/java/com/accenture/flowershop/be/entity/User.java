@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Set;
 
@@ -21,7 +23,7 @@ public class User implements UserDetails {
     private String phone;
     private String address;
     private boolean active;
-    private Double balance;
+    private BigDecimal balance;
     private Integer discount;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
@@ -34,7 +36,12 @@ public class User implements UserDetails {
         setBalance(2000.0);
         setDiscount(5);
     }
+
     public User() {
+    }
+
+    public void setBalance(Double balance) {
+        setBalance(new BigDecimal(balance).setScale(2, RoundingMode.CEILING));
     }
 
     public boolean isActive() {
@@ -130,11 +137,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

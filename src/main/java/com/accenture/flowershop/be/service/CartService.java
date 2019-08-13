@@ -2,6 +2,7 @@ package com.accenture.flowershop.be.service;
 
 import com.accenture.flowershop.be.entity.Flower;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public interface CartService {
@@ -12,7 +13,7 @@ public interface CartService {
 
     Map<Flower, Integer> getFlowersInCart();
 
-    Double getItemPrice(String name);
+    BigDecimal getItemPrice(String name);
 
-    Double getTotalPrice();
+    BigDecimal getTotalPrice();
 }

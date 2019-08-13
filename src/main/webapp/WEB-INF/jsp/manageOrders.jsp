@@ -21,11 +21,11 @@
         <div>
             <table class="table table-sm table-hover">
                 <tr>
-                    <th>Id</th>
+                    <th>Order ID</th>
                     <th>Creation Date</th>
                     <th>Total Price</th>
                     <th>Status</th>
-                    <th>Owner id</th>
+                    <th>User Login</th>
                     <th>Close</th>
                 </tr>
                 <c:forEach items="${orders}" var="orders">

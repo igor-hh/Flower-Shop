@@ -1,6 +1,7 @@
 package com.accenture.flowershop.be.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double totalPrice;
+    private BigDecimal totalPrice;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
@@ -65,11 +66,11 @@ public class Order {
         this.owner = owner;
     }
 
-    public Double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Double totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 

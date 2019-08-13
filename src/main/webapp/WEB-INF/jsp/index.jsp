@@ -13,6 +13,10 @@
 
     <jsp:include page="fragments/navbar.jsp"/>
 
+    <c:if test="${not empty cartSuccess}">
+        <p class="text-info mt-5">${cartSuccess}</p>
+    </c:if>
+
     <c:choose>
         <c:when test="${not empty quantityError1}">
             <p class="text-danger mt-3">${quantityError1}</p>
@@ -28,9 +32,9 @@
                     <div class="input-group input-group-sm">
                         <input class="form-control bg-light text-dark" type="text" name="findString"
                                placeholder="Flower name" value="${findString}">
-                        <input class="form-control bg-light text-dark ml-1" type="number" step="0.01" name="priceFrom"
+                        <input class="form-control bg-light text-dark ml-1" type="number" min="0" step="0.01" name="priceFrom"
                                placeholder="Price from" value="${priceFrom}">
-                        <input class="form-control bg-light text-dark ml-1" type="number" step="0.01" name="priceTo"
+                        <input class="form-control bg-light text-dark ml-1" type="number" min="0" step="0.01" name="priceTo"
                                placeholder="Price to" value="${priceTo}">
                         <button type="submit" class="btn btn-secondary btn-sm ml-1">Find flowers</button>
                     </div>
