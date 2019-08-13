@@ -122,7 +122,7 @@ public class MainController {
             model.addAttribute("quantityError2", "Not enough flower " +
                     flower.getName() +
                     " on stock. You already have " +
-                    flowersInCart.get(flower) + " of that flower in your cart");
+                    flowersInCart.get(flower) + " of that flower in your cart.");
             return "index";
         }
 

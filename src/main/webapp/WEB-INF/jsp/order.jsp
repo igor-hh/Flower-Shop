@@ -23,7 +23,7 @@
             <p class="text-info">Add flowers to cart and create an order.</p>
         </c:if>
         <c:if test="${empty ordersEmpty}">
-            <div>List of orders:</div>
+            <p class="mt-3"><b>Flowers in cart:</b></p>
             <div>
                 <table class="table table-sm table-hover">
                     <tr>
