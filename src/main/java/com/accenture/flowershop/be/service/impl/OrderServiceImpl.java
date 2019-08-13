@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -47,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void createOrderFromCart() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -72,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void payOrder(Order order) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
