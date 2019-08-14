@@ -34,7 +34,7 @@ public class CartServiceImpl implements CartService {
     public void addFlower(Flower flower, Integer quantity) {
 
         if(flowersInCart.containsKey(flower.getId())) {
-            flowersInCart.replace(flower.getId(), flowersInCart.get(flower) + quantity);
+            flowersInCart.replace(flower.getId(), flowersInCart.get(flower.getId()) + quantity);
         } else {
             flowersInCart.put(flower.getId(), quantity);
         }
