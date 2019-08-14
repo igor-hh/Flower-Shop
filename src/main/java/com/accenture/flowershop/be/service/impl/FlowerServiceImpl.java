@@ -16,8 +16,8 @@ public class FlowerServiceImpl implements FlowerService {
     private FlowerRepo flowerRepo;
 
     @Override
-    public Flower findByName(String name) {
-        return flowerRepo.findByName(name);
+    public Flower findById(Long id) {
+        return flowerRepo.findById(id).orElse(null);
     }
 
     @Override
@@ -28,5 +28,10 @@ public class FlowerServiceImpl implements FlowerService {
     @Override
     public List<Flower> findByNameAndPrices(String findString, BigDecimal priceFrom, BigDecimal priceTo) {
         return flowerRepo.findByNameIgnoreCaseContainingAndPriceBetweenOrderByNameAsc(findString, priceFrom, priceTo);
+    }
+
+    @Override
+    public void save(Flower flower) {
+        flowerRepo.save(flower);
     }
 }

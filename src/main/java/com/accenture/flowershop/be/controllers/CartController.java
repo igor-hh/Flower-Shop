@@ -35,8 +35,8 @@ public class CartController {
 
     @PostMapping("/cart")
     public String addToCart(Flower flowerInCart, Integer cartQuantity, Model model, RedirectAttributes redirectAttributes) {
-        Flower flower = flowerService.findByName(flowerInCart.getName());
-        Map<Flower, Integer> flowersInCart = cartService.getFlowersInCart();
+        Flower flower = flowerService.findById(flowerInCart.getId());
+        Map<Long, Integer> flowersInCart = cartService.getFlowersInCart();
 
         if (flower.getQuantity() < cartQuantity) {
             model.addAttribute("quantityError1", "Not enough flowers on stock.");
@@ -62,7 +62,7 @@ public class CartController {
 
     @PostMapping("/cart/remove")
     public String removeFromCart(Flower flowerInCart) {
-        Flower flower = flowerService.findByName(flowerInCart.getName());
+        Flower flower = flowerService.findById(flowerInCart.getId());
 
         cartService.removeFlower(flower);
 

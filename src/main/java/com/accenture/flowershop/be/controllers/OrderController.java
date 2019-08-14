@@ -3,7 +3,6 @@ package com.accenture.flowershop.be.controllers;
 import com.accenture.flowershop.be.entity.Order;
 import com.accenture.flowershop.be.entity.OrderStatus;
 import com.accenture.flowershop.be.entity.User;
-import com.accenture.flowershop.be.service.CartService;
 import com.accenture.flowershop.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

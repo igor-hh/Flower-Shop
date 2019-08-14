@@ -83,7 +83,7 @@
                                     </sec:authorize>
                                 </c:if>
 
-                                <input type="hidden" name="name" value="${flowers.name}"/>
+                                <input type="hidden" name="id" value="${flowers.id}"/>
 
                                 <div class="btn-group">
                                     <c:if test="${flowers.quantity <= 0}">

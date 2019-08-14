@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface FlowerService {
 
-    Flower findByName(String name);
+    Flower findById(Long id);
     List<Flower> findByPrices(BigDecimal priceFrom, BigDecimal priceTo);
     List<Flower> findByNameAndPrices(String findString, BigDecimal priceFrom, BigDecimal priceTo);
+    void save(Flower flower);
 }

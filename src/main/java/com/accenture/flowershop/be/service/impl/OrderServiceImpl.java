@@ -1,11 +1,11 @@
 package com.accenture.flowershop.be.service.impl;
 
 import com.accenture.flowershop.be.entity.*;
-import com.accenture.flowershop.be.repos.FlowerRepo;
-import com.accenture.flowershop.be.repos.OrderItemRepo;
 import com.accenture.flowershop.be.repos.OrderRepo;
 import com.accenture.flowershop.be.repos.UserRepo;
 import com.accenture.flowershop.be.service.CartService;
+import com.accenture.flowershop.be.service.FlowerService;
+import com.accenture.flowershop.be.service.OrderItemService;
 import com.accenture.flowershop.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,11 +24,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepo orderRepo;
     @Autowired
-    private OrderItemRepo orderItemRepo;
+    private OrderItemService orderItemService;
     @Autowired
-    private FlowerRepo flowerRepo;
+    private FlowerService flowerService;
     @Autowired
-    private UserRepo userRepo;
+    private UserRepo userService;
     @Autowired
     private CartService cartService;
 
@@ -60,15 +60,15 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(cartService.getTotalPrice());
         orderRepo.save(order);
 
-        for(Map.Entry<Flower, Integer> entry: cartService.getFlowersInCart().entrySet()) {
-            flower = flowerRepo.findByName(entry.getKey().getName());
+        for(Map.Entry<Long, Integer> entry: cartService.getFlowersInCart().entrySet()) {
+            flower = flowerService.findById(entry.getKey());
             quantity = entry.getValue();
 
             OrderItem orderItem = new OrderItem(order, flower, quantity);
             flower.setQuantity(flower.getQuantity() - quantity);
 
-            flowerRepo.save(flower);
-            orderItemRepo.save(orderItem);
+            flowerService.save(flower);
+            orderItemService.save(orderItem);
         }
         cartService.getFlowersInCart().clear();
     }
@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.PAID.name());
 
         orderRepo.save(order);
-        userRepo.save(user);
+        userService.save(user);
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.accenture.flowershop.be.service.impl;
 
 import com.accenture.flowershop.be.entity.Flower;
 import com.accenture.flowershop.be.entity.User;
-import com.accenture.flowershop.be.repos.FlowerRepo;
 import com.accenture.flowershop.be.service.CartService;
+import com.accenture.flowershop.be.service.FlowerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -21,9 +21,10 @@ import java.util.Map;
 public class CartServiceImpl implements CartService {
 
     @Autowired
-    private FlowerRepo flowerRepo;
+    private FlowerService flowerService;
 
-    private Map<Flower, Integer> flowersInCart;
+    //Map<Flower id, quantity in cart>
+    private Map<Long, Integer> flowersInCart;
 
     public CartServiceImpl() {
         flowersInCart = new HashMap<>();
@@ -32,28 +33,28 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addFlower(Flower flower, Integer quantity) {
 
-        if(flowersInCart.containsKey(flower)) {
-            flowersInCart.replace(flower, flowersInCart.get(flower) + quantity);
+        if(flowersInCart.containsKey(flower.getId())) {
+            flowersInCart.replace(flower.getId(), flowersInCart.get(flower) + quantity);
         } else {
-            flowersInCart.put(flower, quantity);
+            flowersInCart.put(flower.getId(), quantity);
         }
     }
 
     @Override
     public void removeFlower(Flower flower) {
-        flowersInCart.remove(flower);
+        flowersInCart.remove(flower.getId());
     }
 
     @Override
-    public Map<Flower, Integer> getFlowersInCart() {
+    public Map<Long, Integer> getFlowersInCart() {
         return flowersInCart;
     }
 
     @Override
-    public BigDecimal getItemPrice(String name) {
-        Flower flower = flowerRepo.findByName(name);
+    public BigDecimal getItemPrice(Long id) {
+        Flower flower = flowerService.findById(id);
 
-        return flower.getPrice().multiply(new BigDecimal(flowersInCart.get(flower)));
+        return flower.getPrice().multiply(new BigDecimal(flowersInCart.get(flower.getId())));
     }
 
     @Override
@@ -62,8 +63,8 @@ public class CartServiceImpl implements CartService {
         Flower flower;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        for(Map.Entry<Flower, Integer> entry: flowersInCart.entrySet()) {
-            flower = flowerRepo.findByName(entry.getKey().getName());
+        for(Map.Entry<Long, Integer> entry: flowersInCart.entrySet()) {
+            flower = flowerService.findById(entry.getKey());
             Integer quantity = entry.getValue();
             total += flower.getPrice().doubleValue() * quantity;
         }

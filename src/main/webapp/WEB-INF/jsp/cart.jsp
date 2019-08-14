@@ -29,10 +29,10 @@
                 <c:forEach items="${flowersInCart}" var="flowers">
                     <form:form method="post" action="/cart/remove">
                         <tr>
-                            <td>${flowers.key.name}</td>
+                            <td>${flowers.key}</td>
                             <td>${flowers.value}</td>
-                            <td>${cart.getItemPrice(flowers.key.name)}</td>
-                            <input type="hidden" name="name" value="${flowers.key.name}"/>
+                            <td>${cart.getItemPrice(flowers.key)}</td>
+                            <input type="hidden" name="id" value="${flowers.key}"/>
                             <td>
                                 <button type="submit" class="btn btn-danger btn-sm">Remove</button>
                             </td>

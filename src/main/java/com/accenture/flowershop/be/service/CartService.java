@@ -11,9 +11,9 @@ public interface CartService {
 
     void removeFlower(Flower flower);
 
-    Map<Flower, Integer> getFlowersInCart();
+    Map<Long, Integer> getFlowersInCart();
 
-    BigDecimal getItemPrice(String name);
+    BigDecimal getItemPrice(Long id);
 
     BigDecimal getTotalPrice();
 }
