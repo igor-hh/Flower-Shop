@@ -1,5 +1,6 @@
 package com.accenture.flowershop.be.business.service.impl;
 
+import com.accenture.flowershop.be.business.service.UserMarshallingService;
 import com.accenture.flowershop.be.entity.User.User;
 import com.accenture.flowershop.be.entity.User.UserRole;
 import com.accenture.flowershop.be.repos.UserRepo;
@@ -22,6 +23,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private UserMarshallingService userMarshallingService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByLogin(username);
@@ -40,6 +44,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepo.save(user);
 
         logger.info("Added user {} with id: {} to database", user.getLogin(), user.getId());
+
+        try {
+            userMarshallingService.convertUserToXML(user);
+            logger.info("Converted user {} to XML", user.getLogin());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return true;
     }

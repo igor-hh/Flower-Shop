@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@XmlRootElement
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
