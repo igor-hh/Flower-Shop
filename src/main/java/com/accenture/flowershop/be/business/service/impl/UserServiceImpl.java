@@ -1,9 +1,11 @@
-package com.accenture.flowershop.be.service.impl;
+package com.accenture.flowershop.be.business.service.impl;
 
-import com.accenture.flowershop.be.entity.User;
-import com.accenture.flowershop.be.entity.UserRole;
+import com.accenture.flowershop.be.entity.User.User;
+import com.accenture.flowershop.be.entity.User.UserRole;
 import com.accenture.flowershop.be.repos.UserRepo;
-import com.accenture.flowershop.be.service.UserService;
+import com.accenture.flowershop.be.business.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +16,8 @@ import java.util.Collections;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepo userRepo;
@@ -34,6 +38,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setActive(true);
         user.setRoles(Collections.singleton(UserRole.USER));
         userRepo.save(user);
+
+        logger.info("Added user {} with id: {} to database", user.getLogin(), user.getId());
 
         return true;
     }

@@ -1,6 +1,6 @@
-package com.accenture.flowershop.be.service;
+package com.accenture.flowershop.be.business.service;
 
-import com.accenture.flowershop.be.entity.Flower;
+import com.accenture.flowershop.be.entity.Flower.Flower;
 
 import java.math.BigDecimal;
 import java.util.Map;

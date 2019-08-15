@@ -1,7 +1,7 @@
 package com.accenture.flowershop.be.controllers;
 
-import com.accenture.flowershop.be.entity.User;
-import com.accenture.flowershop.be.service.UserService;
+import com.accenture.flowershop.be.business.service.UserService;
+import com.accenture.flowershop.be.entity.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

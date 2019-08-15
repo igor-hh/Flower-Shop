@@ -1,8 +1,10 @@
-package com.accenture.flowershop.be.service.impl;
+package com.accenture.flowershop.be.business.service.impl;
 
-import com.accenture.flowershop.be.entity.Flower;
+import com.accenture.flowershop.be.entity.Flower.Flower;
 import com.accenture.flowershop.be.repos.FlowerRepo;
-import com.accenture.flowershop.be.service.FlowerService;
+import com.accenture.flowershop.be.business.service.FlowerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Service
 public class FlowerServiceImpl implements FlowerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FlowerService.class);
 
     @Autowired
     private FlowerRepo flowerRepo;
@@ -33,5 +37,7 @@ public class FlowerServiceImpl implements FlowerService {
     @Override
     public void save(Flower flower) {
         flowerRepo.save(flower);
+
+        logger.info("Saved flower \"{}\" to database", flower.getName());
     }
 }

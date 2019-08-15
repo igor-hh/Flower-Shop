@@ -1,4 +1,7 @@
-package com.accenture.flowershop.be.entity;
+package com.accenture.flowershop.be.entity.Order;
+
+import com.accenture.flowershop.be.entity.Flower.Flower;
+import com.accenture.flowershop.be.entity.Order.Order;
 
 import javax.persistence.*;
 

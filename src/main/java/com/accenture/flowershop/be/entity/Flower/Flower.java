@@ -1,4 +1,4 @@
-package com.accenture.flowershop.be.entity;
+package com.accenture.flowershop.be.entity.Flower;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

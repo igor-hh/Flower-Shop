@@ -1,6 +1,6 @@
 package com.accenture.flowershop.be.config;
 
-import com.accenture.flowershop.be.service.impl.UserServiceImpl;
+import com.accenture.flowershop.be.business.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

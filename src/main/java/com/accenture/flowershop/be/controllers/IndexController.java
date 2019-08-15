@@ -1,8 +1,9 @@
 package com.accenture.flowershop.be.controllers;
 
-import com.accenture.flowershop.be.entity.Flower;
-import com.accenture.flowershop.be.repos.FlowerRepo;
-import com.accenture.flowershop.be.service.FlowerService;
+import com.accenture.flowershop.be.entity.Flower.Flower;
+import com.accenture.flowershop.be.business.service.FlowerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,8 @@ import static org.apache.logging.log4j.util.Strings.isNotBlank;
 
 @Controller
 public class IndexController {
+
+    private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @Autowired
     private FlowerService flowerService;
@@ -43,6 +46,8 @@ public class IndexController {
         } else {
             flowers = flowerService.findByNameAndPrices(findString, new BigDecimal(priceFrom), new BigDecimal(priceTo));
         }
+
+        logger.info("User applied following filters: name: \"{}\" priceFrom: \"{}\" priceTo: \"{}\"", findString, priceFrom, priceTo);
 
         if (priceFrom == Double.MIN_VALUE) {
             priceFrom = null;

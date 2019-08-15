@@ -1,7 +1,7 @@
-package com.accenture.flowershop.be.service;
+package com.accenture.flowershop.be.business.service;
 
-import com.accenture.flowershop.be.entity.Order;
-import com.accenture.flowershop.be.entity.User;
+import com.accenture.flowershop.be.entity.Order.Order;
+import com.accenture.flowershop.be.entity.User.User;
 
 import java.util.List;
 

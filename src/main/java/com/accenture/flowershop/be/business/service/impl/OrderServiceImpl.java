@@ -1,12 +1,18 @@
-package com.accenture.flowershop.be.service.impl;
+package com.accenture.flowershop.be.business.service.impl;
 
-import com.accenture.flowershop.be.entity.*;
+import com.accenture.flowershop.be.entity.Flower.Flower;
+import com.accenture.flowershop.be.entity.Order.Order;
+import com.accenture.flowershop.be.entity.Order.OrderItem;
+import com.accenture.flowershop.be.entity.Order.OrderStatus;
+import com.accenture.flowershop.be.entity.User.User;
 import com.accenture.flowershop.be.repos.OrderRepo;
 import com.accenture.flowershop.be.repos.UserRepo;
-import com.accenture.flowershop.be.service.CartService;
-import com.accenture.flowershop.be.service.FlowerService;
-import com.accenture.flowershop.be.service.OrderItemService;
-import com.accenture.flowershop.be.service.OrderService;
+import com.accenture.flowershop.be.business.service.CartService;
+import com.accenture.flowershop.be.business.service.FlowerService;
+import com.accenture.flowershop.be.business.service.OrderItemService;
+import com.accenture.flowershop.be.business.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,6 +26,8 @@ import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     @Autowired
     private OrderRepo orderRepo;
@@ -68,9 +76,12 @@ public class OrderServiceImpl implements OrderService {
             flower.setQuantity(flower.getQuantity() - quantity);
 
             flowerService.save(flower);
+            logger.info("Flower's {} quantity updated to {}", flower.getName(), flower.getQuantity());
             orderItemService.save(orderItem);
         }
         cartService.getFlowersInCart().clear();
+
+        logger.info("User's {} cart cleared", user.getLogin());
     }
 
     @Override
@@ -84,6 +95,8 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepo.save(order);
         userService.save(user);
+
+        logger.info("User {} paid order id: {}, total order price: {}", user.getLogin(), order.getId(), order.getTotalPrice());
     }
 
     @Override
@@ -91,5 +104,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.CLOSED.name());
         order.setCloseDate(new Date());
         orderRepo.save(order);
+
+        logger.info("Order id: {} closed by admin", order.getId());
     }
 }

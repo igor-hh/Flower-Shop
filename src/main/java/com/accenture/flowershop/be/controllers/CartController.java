@@ -1,8 +1,8 @@
 package com.accenture.flowershop.be.controllers;
 
-import com.accenture.flowershop.be.entity.Flower;
-import com.accenture.flowershop.be.service.CartService;
-import com.accenture.flowershop.be.service.FlowerService;
+import com.accenture.flowershop.be.business.service.CartService;
+import com.accenture.flowershop.be.business.service.FlowerService;
+import com.accenture.flowershop.be.entity.Flower.Flower;
 import org.atteo.evo.inflector.English;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

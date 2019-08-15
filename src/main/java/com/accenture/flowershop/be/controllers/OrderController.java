@@ -1,9 +1,9 @@
 package com.accenture.flowershop.be.controllers;
 
-import com.accenture.flowershop.be.entity.Order;
-import com.accenture.flowershop.be.entity.OrderStatus;
-import com.accenture.flowershop.be.entity.User;
-import com.accenture.flowershop.be.service.OrderService;
+import com.accenture.flowershop.be.business.service.OrderService;
+import com.accenture.flowershop.be.entity.Order.Order;
+import com.accenture.flowershop.be.entity.Order.OrderStatus;
+import com.accenture.flowershop.be.entity.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
