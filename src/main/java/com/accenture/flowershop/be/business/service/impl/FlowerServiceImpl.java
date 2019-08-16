@@ -1,8 +1,8 @@
 package com.accenture.flowershop.be.business.service.impl;
 
+import com.accenture.flowershop.be.business.service.FlowerService;
 import com.accenture.flowershop.be.entity.Flower.Flower;
 import com.accenture.flowershop.be.repos.FlowerRepo;
-import com.accenture.flowershop.be.business.service.FlowerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,12 @@ public class FlowerServiceImpl implements FlowerService {
 
     @Autowired
     private FlowerRepo flowerRepo;
+
+    @Override
+    public Iterable<Flower> findAll() {
+        Iterable<Flower> flowers = flowerRepo.findAll();
+        return flowers;
+    }
 
     @Override
     public Flower findById(Long id) {
@@ -39,5 +45,10 @@ public class FlowerServiceImpl implements FlowerService {
         flowerRepo.save(flower);
 
         logger.info("Saved flower \"{}\" to database", flower.getName());
+    }
+
+    @Override
+    public void saveAll(List<Flower> flowers) {
+        flowerRepo.saveAll(flowers);
     }
 }
