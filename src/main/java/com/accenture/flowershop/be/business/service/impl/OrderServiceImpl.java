@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,11 +63,12 @@ public class OrderServiceImpl implements OrderService {
 
         Flower flower;
         Integer quantity;
+        List<OrderItem> orderItemsList = new ArrayList<>();
         Order order = new Order();
         order.setOwner(user);
         order.setStatus(OrderStatus.CREATED.name());
         order.setTotalPrice(cartService.getTotalPrice());
-        orderRepo.save(order);
+
 
         for(Map.Entry<Long, Integer> entry: cartService.getFlowersInCart().entrySet()) {
             flower = flowerService.findById(entry.getKey());
@@ -77,10 +79,14 @@ public class OrderServiceImpl implements OrderService {
 
             flowerService.save(flower);
             logger.info("Flower's {} quantity updated to {}", flower.getName(), flower.getQuantity());
-            orderItemService.save(orderItem);
+            orderItemsList.add(orderItem);
         }
+        orderRepo.save(order);
+        orderItemService.saveAll(orderItemsList);
+
         cartService.getFlowersInCart().clear();
 
+        logger.info("Order id: {} created", order.getId());
         logger.info("User's {} cart cleared", user.getLogin());
     }
 

@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
@@ -21,5 +23,10 @@ public class OrderItemServiceImpl implements OrderItemService {
         orderItemRepo.save(orderItem);
 
         logger.info("Saved order item id: \"{}\" to database. Order id: {}", orderItem.getId(), orderItem.getOrder().getId());
+    }
+
+    @Override
+    public void saveAll(List<OrderItem> orderItemsList) {
+        orderItemRepo.saveAll(orderItemsList);
     }
 }
