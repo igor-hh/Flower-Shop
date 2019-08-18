@@ -46,6 +46,10 @@ public class OrderController {
     @PostMapping("/order/pay")
     public String payOrder(@AuthenticationPrincipal User user, Order orderToPay, Model model) {
         Order order = orderService.findById(orderToPay.getId());
+        if(order == null || !user.getLogin().equals(order.getOwner().getLogin())) {
+            //error
+            return "order";
+        }
 
         if(order.getTotalPrice().compareTo(user.getBalance()) == 1) {
             model.addAttribute("payError", "Not enough money to pay. You " +
@@ -77,7 +81,9 @@ public class OrderController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String closeOrder(Order orderToClose) {
         Order order = orderService.findById(orderToClose.getId());
-
+        if(order == null || !order.getStatus().equals(OrderStatus.PAID.name())) {
+            return "manageOrders";
+        }
         orderService.closeOrder(order);
 
         return "redirect:/manageOrders";

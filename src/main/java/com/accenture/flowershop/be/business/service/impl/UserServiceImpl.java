@@ -9,11 +9,13 @@ import com.accenture.flowershop.be.util.JMS.UserDiscountMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 
@@ -31,16 +33,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private JmsTemplate jmsTemplate;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByLogin(username);
+        User user = userRepo.findByLogin(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found!");
+        }
+        return user;
     }
 
     //returns true if user was successfully created
     @Override
     public boolean addUser(User user) {
-        User userFromDB = userRepo.findByLogin(user.getLogin());
-        if(userFromDB != null) {
+
+        Boolean response = restTemplate.getForObject("http://localhost:8080/user/" + user.getLogin(), Boolean.class);
+        if(response) {
             return false;
         }
 
@@ -75,5 +85,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findById(Long id) {
         return userRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        return userRepo.findByLogin(login);
     }
 }

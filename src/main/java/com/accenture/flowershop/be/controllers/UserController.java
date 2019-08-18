@@ -3,11 +3,15 @@ package com.accenture.flowershop.be.controllers;
 import com.accenture.flowershop.be.business.service.UserService;
 import com.accenture.flowershop.be.entity.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+
+import static org.apache.logging.log4j.util.Strings.isNotBlank;
 
 @Controller
 public class UserController {
@@ -15,11 +19,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @AuthenticationPrincipal User user,
+                        Model model) {
         if (error != null) {
             model.addAttribute("loginError", "Your login attempt was not successful, try again.");
         }
+        if (user != null) {
+            return "redirect:/";
+        }
+
         return "login";
     }
 

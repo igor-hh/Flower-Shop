@@ -34,8 +34,15 @@ public class CartController {
     }
 
     @PostMapping("/cart")
-    public String addToCart(Flower flowerInCart, Integer cartQuantity, Model model, RedirectAttributes redirectAttributes) {
+    public String addToCart(Flower flowerInCart, Integer cartQuantity,
+                            Model model, RedirectAttributes redirectAttributes) {
         Flower flower = flowerService.findById(flowerInCart.getId());
+
+        if(flower == null || cartQuantity <= 0) {
+            //error
+            return "index";
+        }
+
         Map<Long, Integer> flowersInCart = cartService.getFlowersInCart();
 
         if (flower.getQuantity() < cartQuantity) {
@@ -63,6 +70,11 @@ public class CartController {
     @PostMapping("/cart/remove")
     public String removeFromCart(Flower flowerInCart) {
         Flower flower = flowerService.findById(flowerInCart.getId());
+
+        if(flower == null) {
+            //error
+            return "redirect:/cart";
+        }
 
         cartService.removeFlower(flower);
 

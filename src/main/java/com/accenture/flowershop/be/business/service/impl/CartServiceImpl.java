@@ -83,4 +83,9 @@ public class CartServiceImpl implements CartService {
 
         return new BigDecimal(total).setScale(2, RoundingMode.CEILING);
     }
+
+    @Override
+    public String getFlowerName(Long id) {
+        return flowerService.findById(id).getName();
+    }
 }

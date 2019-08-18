@@ -12,7 +12,14 @@
     <div>
         <c:if test="${not empty loginError}">
             <p class="text-danger mt-3">${loginError}</p>
-            <p class="text-danger">Reason: ${SPRING_SECURITY_LAST_EXCEPTION.message}</p>
+            <c:choose>
+                <c:when test="${not empty loginNotExists}">
+                    <p class="text-danger mt-3">Reason: ${loginNotExists}</p>
+                </c:when>
+                <c:otherwise>
+                    <p class="text-danger">Reason: ${SPRING_SECURITY_LAST_EXCEPTION.message}</p>
+                </c:otherwise>
+            </c:choose>
         </c:if>
     </div>
     <form:form action="/login" method="post">
