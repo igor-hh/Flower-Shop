@@ -5,9 +5,11 @@ import com.accenture.flowershop.be.entity.User.User;
 import com.accenture.flowershop.be.entity.User.UserRole;
 import com.accenture.flowershop.be.repos.UserRepo;
 import com.accenture.flowershop.be.business.service.UserService;
+import com.accenture.flowershop.be.util.JMS.UserDiscountMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserMarshallingService userMarshallingService;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -52,11 +57,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             e.printStackTrace();
         }
 
+        UserDiscountMessage userDiscountMessage = new UserDiscountMessage();
+        userDiscountMessage.setId(user.getId());
+        userDiscountMessage.setDiscount(user.getDiscount() + 1);
+        jmsTemplate.convertAndSend("discount", userDiscountMessage);
+
+        logger.info("Sent JMS message to \"discount\" topic with new user discount");
+
         return true;
     }
 
     @Override
     public void save(User user) {
         userRepo.save(user);
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepo.findById(id).orElse(null);
     }
 }

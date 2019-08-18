@@ -21,7 +21,7 @@ public class FlowerStockWebServiceImpl implements FlowerStockWebService {
     private static FlowerService flowerService;
 
     @Autowired
-    public void getFlowerRepo(FlowerService flowerService) {
+    public void setFlowerService(FlowerService flowerService) {
         this.flowerService = flowerService;
     }
 

@@ -6,4 +6,5 @@ public interface UserService {
 
     boolean addUser(User user);
     void save(User user);
+    User findById(Long id);
 }

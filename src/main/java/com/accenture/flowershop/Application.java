@@ -3,6 +3,7 @@ package com.accenture.flowershop;
 import com.accenture.flowershop.be.business.service.impl.FlowerStockWebServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jms.annotation.EnableJms;
 
 import javax.xml.ws.Endpoint;
 
