@@ -30,11 +30,11 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Password: </label>
             <div class="col-sm-5">
-                <c:if test="${not empty passwordError}">
+                <c:if test="${(not empty passwordError) or (not empty passwordBlank)}">
                     <input type="password" class="form-control is-invalid" name="password" placeholder="Enter your password"/>
-                    <div class="invalid-feedback">${passwordError}</div>
+                    <div class="invalid-feedback">${passwordBlank}${passwordError}</div>
                 </c:if>
-                <c:if test="${empty passwordError}">
+                <c:if test="${(empty passwordError) and (empty passwordBlank)}">
                     <input type="password" class="form-control" name="password" placeholder="Enter your password"/>
                 </c:if>
             </div>

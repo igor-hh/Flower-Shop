@@ -36,7 +36,7 @@
                             <td>${orders.totalPrice}</td>
                             <td>${orders.status}</td>
                             <td>${orders.owner.getLogin()}</td>
-                            <input type="hidden" name="id" value="${orders.id}"/>
+                            <input type="hidden" name="orderId" value="${orders.id}"/>
                             <td>
                                 <button type="submit" class="btn btn-success btn-sm">Close order</button>
                             </td>

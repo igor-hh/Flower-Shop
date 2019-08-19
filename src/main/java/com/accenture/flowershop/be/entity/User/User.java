@@ -35,16 +35,16 @@ public class User implements UserDetails {
 
     @PrePersist
     public void prePersist() {
-        setBalance(2000.0);
+        setBalance(new BigDecimal(2000.0).setScale(2, RoundingMode.CEILING));
         setDiscount(5);
     }
 
     public User() {
     }
 
-    public void setBalance(Double balance) {
-        setBalance(new BigDecimal(balance).setScale(2, RoundingMode.CEILING));
-    }
+//    public void setBalance(Double balance) {
+//        setBalance(new BigDecimal(balance).setScale(2, RoundingMode.CEILING));
+//    }
 
     public boolean isActive() {
         return active;

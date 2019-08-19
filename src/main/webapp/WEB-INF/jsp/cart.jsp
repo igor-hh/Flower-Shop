@@ -26,13 +26,13 @@
                     <th>Item Price</th>
                     <th>Remove From Cart</th>
                 </tr>
-                <c:forEach items="${flowersInCart}" var="flowers">
+                <c:forEach items="${cartItems}" var="cartItems">
                     <form:form method="post" action="/cart/remove">
                         <tr>
-                            <td>${cart.getFlowerName(flowers.key)}</td>
-                            <td>${flowers.value}</td>
-                            <td>${cart.getItemPrice(flowers.key)}</td>
-                            <input type="hidden" name="id" value="${flowers.key}"/>
+                            <td>${cartItems.flowerName}</td>
+                            <td>${cartItems.quantity}</td>
+                            <td>${cartItems.price}</td>
+                            <input type="hidden" name="flowerId" value="${cartItems.id}"/>
                             <td>
                                 <button type="submit" class="btn btn-danger btn-sm">Remove</button>
                             </td>
@@ -41,7 +41,7 @@
                 </c:forEach>
             </table>
             <div>
-                <p>Total price with discount: <b>${cart.getTotalPrice()}</b></p>
+                <p>Total price with discount: <b>${totalPrice}</b></p>
             </div>
         </div>
         <br>

@@ -44,6 +44,10 @@ public class UserController {
     @PostMapping("/signup")
     public String createUser(User user, Model model) {
 
+        if(!isNotBlank(user.getPassword())) {
+            model.addAttribute("passwordBlank", "Password cannot be blank");
+            return "signup";
+        }
         if (user.getPassword() != null && !user.getPassword().equals(user.getPassword2())) {
             model.addAttribute("passwordError", "Passwords must me equal");
             return "signup";

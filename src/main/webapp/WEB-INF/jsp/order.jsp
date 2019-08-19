@@ -42,7 +42,7 @@
                                 <td><fmt:formatDate value="${orders.closeDate}" pattern="dd.MM.yyyy HH:mm:ss"/></td>
                                 <td>${orders.totalPrice}</td>
                                 <td>${orders.status}</td>
-                                <input type="hidden" name="id" value="${orders.id}"/>
+                                <input type="hidden" name="orderId" value="${orders.id}"/>
                                 <div>
                                     <c:if test="${orders.status != 'CREATED'}">
                                         <td>

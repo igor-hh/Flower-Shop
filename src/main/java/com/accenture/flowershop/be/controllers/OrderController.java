@@ -22,17 +22,14 @@ public class OrderController {
 
     @GetMapping("/order")
     public String orderList(@AuthenticationPrincipal User user, Model model) {
-
-        List<Order> orders = orderService.findByOwner(user);
-
-        if(orders.size() == 0) {
-            model.addAttribute("ordersEmpty", "You have no orders :(");
+        try {
+            List<Order> orders = orderService.findByOwner(user);
+            model.addAttribute("orders", orders);
+            return "order";
+        } catch (Exception e) {
+            model.addAttribute("ordersEmpty", e.getMessage());
             return "order";
         }
-
-        model.addAttribute("orders", orders);
-
-        return "order";
     }
 
     @PostMapping("/order")
@@ -44,48 +41,38 @@ public class OrderController {
     }
 
     @PostMapping("/order/pay")
-    public String payOrder(@AuthenticationPrincipal User user, Order orderToPay, Model model) {
-        Order order = orderService.findById(orderToPay.getId());
-        if(order == null || !user.getLogin().equals(order.getOwner().getLogin())) {
-            //error
+    public String payOrder(Long orderId, Model model) {
+        try {
+            orderService.payOrder(orderId);
+            return "redirect:/order";
+        } catch (Exception e) {
+            model.addAttribute("payError", e.getMessage());
             return "order";
         }
-
-        if(order.getTotalPrice().compareTo(user.getBalance()) == 1) {
-            model.addAttribute("payError", "Not enough money to pay. You " +
-                    (order.getTotalPrice().doubleValue() - user.getBalance().doubleValue()) + " balance short");
-            return "order";
-        }
-        orderService.payOrder(order);
-
-        return "redirect:/order";
     }
 
     @GetMapping("/manageOrders")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String manageOrderList(Model model) {
-
-        List<Order> orders = orderService.findByStatus(OrderStatus.PAID.name());
-
-        if (orderService.findByStatus(OrderStatus.PAID.name()).size() == 0) {
-            model.addAttribute("ordersEmpty", "No paid orders to display");
+        try {
+            List<Order> orders = orderService.findByStatus(OrderStatus.PAID.name());
+            model.addAttribute("orders", orders);
+            return "manageOrders";
+        } catch (Exception e) {
+            model.addAttribute("ordersEmpty", e.getMessage());
             return "manageOrders";
         }
-
-        model.addAttribute("orders", orders);
-
-        return "manageOrders";
     }
 
     @PostMapping("/manageOrders")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String closeOrder(Order orderToClose) {
-        Order order = orderService.findById(orderToClose.getId());
-        if(order == null || !order.getStatus().equals(OrderStatus.PAID.name())) {
+    public String closeOrder(Long orderId, Model model) {
+        try {
+            orderService.closeOrder(orderId);
+            return "manageOrders";
+        } catch (Exception e) {
+            model.addAttribute("closeError", e.getMessage());
             return "manageOrders";
         }
-        orderService.closeOrder(order);
-
-        return "redirect:/manageOrders";
     }
 }
