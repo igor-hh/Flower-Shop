@@ -33,7 +33,7 @@ public class CartController {
         }
 
         List<CartItem> cartItems = new ArrayList<>();
-        for(Map.Entry<Long, Integer> entry: cartService.getCart().getFlowersInCart().entrySet()) {
+        for (Map.Entry<Long, Integer> entry : cartService.getCart().getFlowersInCart().entrySet()) {
             Flower flower = flowerService.findById(entry.getKey());
             CartItem cartItem = new CartItem(entry.getKey(), flower.getName(),
                     flower.getPrice().multiply(new BigDecimal(entry.getValue())), entry.getValue());

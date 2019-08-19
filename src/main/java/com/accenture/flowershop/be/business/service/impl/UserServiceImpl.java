@@ -26,13 +26,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
-
     @Autowired
     private UserMarshallingService userMarshallingService;
-
     @Autowired
     private JmsTemplate jmsTemplate;
-
     @Autowired
     private RestTemplate restTemplate;
 

@@ -69,7 +69,7 @@ public class OrderController {
     public String closeOrder(Long orderId, Model model) {
         try {
             orderService.closeOrder(orderId);
-            return "manageOrders";
+            return "redirect:/manageOrders";
         } catch (Exception e) {
             model.addAttribute("closeError", e.getMessage());
             return "manageOrders";

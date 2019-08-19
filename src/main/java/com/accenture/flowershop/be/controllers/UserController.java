@@ -32,7 +32,6 @@ public class UserController {
         if (user != null) {
             return "redirect:/";
         }
-
         return "login";
     }
 
@@ -43,8 +42,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public String createUser(User user, Model model) {
-
-        if(!isNotBlank(user.getPassword())) {
+        if (!isNotBlank(user.getPassword())) {
             model.addAttribute("passwordBlank", "Password cannot be blank");
             return "signup";
         }
@@ -52,12 +50,10 @@ public class UserController {
             model.addAttribute("passwordError", "Passwords must me equal");
             return "signup";
         }
-
         if (!userService.addUser(user)) {
             model.addAttribute("userError", "User " + user.getLogin() + " already exists!");
             return "signup";
         }
-
         return "redirect:/login";
     }
 }

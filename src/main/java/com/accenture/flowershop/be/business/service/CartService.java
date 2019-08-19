@@ -10,8 +10,6 @@ public interface CartService {
 
     Flower addFlower(Long flowerId, Integer quantity) throws Exception;
     void removeFlower(Long flowerId) throws Exception;
-    BigDecimal getItemPrice(Long id);
     BigDecimal getTotalPrice();
-    String getFlowerName(Long id);
     Cart getCart();
 }

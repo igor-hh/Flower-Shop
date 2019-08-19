@@ -34,16 +34,6 @@ public class FlowerServiceImpl implements FlowerService {
     }
 
     @Override
-    public List<Flower> findByPrices(BigDecimal priceFrom, BigDecimal priceTo) {
-        return flowerRepo.findByPriceBetweenOrderByNameAsc(priceFrom, priceTo);
-    }
-
-    @Override
-    public List<Flower> findByNameAndPrices(String findString, BigDecimal priceFrom, BigDecimal priceTo) {
-        return flowerRepo.findByNameIgnoreCaseContainingAndPriceBetweenOrderByNameAsc(findString, priceFrom, priceTo);
-    }
-
-    @Override
     public void save(Flower flower) {
         flowerRepo.save(flower);
 

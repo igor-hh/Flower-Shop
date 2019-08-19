@@ -22,7 +22,6 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private FlowerService flowerService;
-
     @Autowired
     private Cart cart;
 
@@ -45,14 +44,12 @@ public class CartServiceImpl implements CartService {
                     " on stock. You already have " +
                     cart.getFlowersInCart().get(flowerId) + " of that flower in your cart.");
         }
-
         if(cart.getFlowersInCart().containsKey(flower.getId())) {
             cart.getFlowersInCart().replace(flower.getId(), cart.getFlowersInCart().get(flower.getId()) + quantity);
         } else {
             cart.getFlowersInCart().put(flower.getId(), quantity);
         }
         logger.info("Added flower \"{}\" to user's \"{}\" cart, quantity: {}", flower.getName(), user.getLogin(), quantity);
-
         return flower;
     }
 
@@ -66,13 +63,6 @@ public class CartServiceImpl implements CartService {
         cart.getFlowersInCart().remove(flowerId);
 
         logger.info("Removed flower \"{}\" from user's \"{}\" cart", flower.getName(), user.getLogin());
-    }
-
-    @Override
-    public BigDecimal getItemPrice(Long id) {
-        Flower flower = flowerService.findById(id);
-
-        return flower.getPrice().multiply(new BigDecimal(cart.getFlowersInCart().get(flower.getId())));
     }
 
     @Override
@@ -90,11 +80,6 @@ public class CartServiceImpl implements CartService {
         total = total.multiply(new BigDecimal((100.0 - user.getDiscount()) / 100));
 
         return total.setScale(2, RoundingMode.CEILING);
-    }
-
-    @Override
-    public String getFlowerName(Long id) {
-        return flowerService.findById(id).getName();
     }
 
     @Override

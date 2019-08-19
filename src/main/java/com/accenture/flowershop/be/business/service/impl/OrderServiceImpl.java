@@ -42,11 +42,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemRepo orderItemRepo;
 
     @Override
-    public Order findById(Long id) throws Exception {
-        return orderRepo.findById(id).orElseThrow(() -> new Exception("Order not found"));
-    }
-
-    @Override
     public List<Order> findByOwner(User user) throws Exception {
         List<Order> orders = orderRepo.findByOwnerOrderByIdAsc(user);
         if(orders.size() == 0) {
@@ -134,15 +129,4 @@ public class OrderServiceImpl implements OrderService {
 
         logger.info("Order id: {} closed by admin", order.getId());
     }
-//    @Override
-//    public void save(OrderItem orderItem) {
-//        orderItemRepo.save(orderItem);
-//
-//        logger.info("Saved order item id: \"{}\" to database. Order id: {}", orderItem.getId(), orderItem.getOrder().getId());
-//    }
-//
-//    @Override
-//    public void saveAll(List<OrderItem> orderItemsList) {
-//        orderItemRepo.saveAll(orderItemsList);
-//    }
 }
