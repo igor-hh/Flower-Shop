@@ -3,7 +3,7 @@ package com.accenture.flowershop.fe.controllers;
 import com.accenture.flowershop.be.business.service.CartService;
 import com.accenture.flowershop.be.business.service.FlowerService;
 import com.accenture.flowershop.be.entity.Flower.Flower;
-import com.accenture.flowershop.be.entity.cart.CartItem;
+import com.accenture.flowershop.be.entity.cart.CartItemRepresentation;
 import org.atteo.evo.inflector.English;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,12 +32,12 @@ public class CartController {
             return "cart";
         }
 
-        List<CartItem> cartItems = new ArrayList<>();
+        List<CartItemRepresentation> cartItems = new ArrayList<>();
         for (Map.Entry<Long, Integer> entry : cartService.getCart().getFlowersInCart().entrySet()) {
             Flower flower = flowerService.findById(entry.getKey());
-            CartItem cartItem = new CartItem(entry.getKey(), flower.getName(),
+            CartItemRepresentation cartItemRepresentation = new CartItemRepresentation(entry.getKey(), flower.getName(),
                     flower.getPrice().multiply(new BigDecimal(entry.getValue())), entry.getValue());
-            cartItems.add(cartItem);
+            cartItems.add(cartItemRepresentation);
         }
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", cartService.getTotalPrice());

@@ -2,13 +2,16 @@ package com.accenture.flowershop.be.entity.cart;
 
 import java.math.BigDecimal;
 
-public class CartItem {
+/**
+ * Cart items data representation for frontend
+ */
+public class CartItemRepresentation {
     private Long id;
     private String flowerName;
     private BigDecimal price;
     private Integer quantity;
 
-    public CartItem(Long id, String flowerName, BigDecimal price, Integer quantity) {
+    public CartItemRepresentation(Long id, String flowerName, BigDecimal price, Integer quantity) {
         this.id = id;
         this.flowerName = flowerName;
         this.price = price;

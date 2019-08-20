@@ -21,7 +21,6 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,18 +42,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findByOwner(User user) throws Exception {
-        List<Order> orders = orderRepo.findByOwnerOrderByIdAsc(user);
-        if(orders.size() == 0) {
-            throw new Exception ("You have no orders :(");
-        }
-        return orders;
-    }
-
-    @Override
-    public List<Order> findByStatus(String status) throws Exception {
-        List<Order> orders = orderRepo.findByStatus(status);
+        List<Order> orders = orderRepo.findByOwnerOrderByIdDesc(user);
         if (orders.size() == 0) {
-            throw new Exception("No paid orders to display");
+            throw new Exception("You have no orders :(");
         }
         return orders;
     }
@@ -72,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.CREATED.name());
         order.setTotalPrice(cartService.getTotalPrice());
 
-        for(Map.Entry<Long, Integer> entry: cartService.getCart().getFlowersInCart().entrySet()) {
+        for (Map.Entry<Long, Integer> entry : cartService.getCart().getFlowersInCart().entrySet()) {
             flower = flowerService.findById(entry.getKey());
             quantity = entry.getValue();
 
@@ -97,13 +87,13 @@ public class OrderServiceImpl implements OrderService {
     public void payOrder(Long orderId) throws Exception {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new Exception("Order not found"));
-        if(!user.getLogin().equals(order.getOwner().getLogin())) {
+        if (!user.getLogin().equals(order.getOwner().getLogin())) {
             throw new Exception("You are not owner of the order " + order.getId());
         }
-        if(!order.getStatus().equals(OrderStatus.CREATED.name())) {
+        if (!order.getStatus().equals(OrderStatus.CREATED.name())) {
             throw new Exception("Order is already paid");
         }
-        if(order.getTotalPrice().compareTo(user.getBalance()) == 1) {
+        if (order.getTotalPrice().compareTo(user.getBalance()) == 1) {
             throw new Exception("Not enough money to pay. You " +
                     (order.getTotalPrice().subtract(user.getBalance())) + " balance short");
         }
@@ -119,14 +109,28 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void closeOrder(Long orderId) throws Exception {
-        Order order = orderRepo.findById(orderId).orElseThrow(() -> new Exception("Order not found."));
-        if(!order.getStatus().equals(OrderStatus.PAID.name())) {
-            throw new Exception("You can close only paid orders.");
-        }
-        order.setStatus(OrderStatus.CLOSED.name());
-        order.setCloseDate(new Date());
-        orderRepo.save(order);
+//        Order order = orderRepo.findById(orderId).orElseThrow(() -> new Exception("Order not found."));
+//        if(!order.getStatus().equals(OrderStatus.PAID.name())) {
+//            throw new Exception("You can close only paid orders.");
+//        }
+//        order.setStatus(OrderStatus.CLOSED.name());
+//        order.setCloseDate(new Date());
+//        orderRepo.save(order);
+//        logger.info("Order id: {} closed by admin", order.getId());
 
-        logger.info("Order id: {} closed by admin", order.getId());
+        int result = orderRepo.updateOrderStatus(orderId);
+        if (result == 0) {
+            throw new Exception("Something went wrong");
+        }
+        logger.info("Order id: {} closed by admin", orderId);
+    }
+
+    @Override
+    public List<Order> findManagerOrders() throws Exception {
+        List<Order> orders = orderRepo.findAllByOrderByStatusDescCreationDateDesc();
+        if (orders.size() == 0) {
+            throw new Exception("No orders to display");
+        }
+        return orders;
     }
 }

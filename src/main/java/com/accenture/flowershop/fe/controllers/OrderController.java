@@ -55,7 +55,7 @@ public class OrderController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String manageOrderList(Model model) {
         try {
-            List<Order> orders = orderService.findByStatus(OrderStatus.PAID.name());
+            List<Order> orders = orderService.findManagerOrders();
             model.addAttribute("orders", orders);
             return "manageOrders";
         } catch (Exception e) {
@@ -67,6 +67,14 @@ public class OrderController {
     @PostMapping("/manageOrders")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String closeOrder(Long orderId, Model model) {
+//        try {
+//            orderService.closeOrder(orderId);
+//            return "redirect:/manageOrders";
+//        } catch (Exception e) {
+//            model.addAttribute("closeError", e.getMessage());
+//            return "manageOrders";
+//        }
+
         try {
             orderService.closeOrder(orderId);
             return "redirect:/manageOrders";
