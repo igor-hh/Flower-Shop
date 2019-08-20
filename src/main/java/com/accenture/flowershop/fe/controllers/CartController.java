@@ -1,4 +1,4 @@
-package com.accenture.flowershop.be.controllers;
+package com.accenture.flowershop.fe.controllers;
 
 import com.accenture.flowershop.be.business.service.CartService;
 import com.accenture.flowershop.be.business.service.FlowerService;
@@ -57,17 +57,17 @@ public class CartController {
             return "redirect:/";
         } catch (Exception e) {
             model.addAttribute("cartError", e.getMessage());
+            return "index";
         }
-        return "index";
     }
 
     @PostMapping("/cart/remove")
     public String removeFromCart(Long flowerId) {
         try {
             cartService.removeFlower(flowerId);
+            return "redirect:/cart";
         } catch (Exception e) {
             return "redirect:/cart";
         }
-        return "redirect:/cart";
     }
 }

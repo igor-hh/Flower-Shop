@@ -46,10 +46,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public boolean addUser(User user) {
 
-        Boolean response = restTemplate.getForObject("http://localhost:8080/user/" + user.getLogin(), Boolean.class);
-        if(response) {
+        User userFromDb = userRepo.findByLogin(user.getLogin());
+        if(userFromDb != null) {
             return false;
         }
+
+//        Boolean response = restTemplate.getForObject("http://localhost:8080/user/" + user.getLogin(), Boolean.class);
+//        if(response) {
+//            return false;
+//        }
 
         user.setActive(true);
         user.setRoles(Collections.singleton(UserRole.USER));

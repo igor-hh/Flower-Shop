@@ -1,4 +1,4 @@
-package com.accenture.flowershop.be.controllers;
+package com.accenture.flowershop.fe.controllers;
 
 import com.accenture.flowershop.be.business.service.UserService;
 import com.accenture.flowershop.be.entity.User.User;
