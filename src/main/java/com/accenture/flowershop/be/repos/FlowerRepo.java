@@ -1,6 +1,6 @@
 package com.accenture.flowershop.be.repos;
 
-import com.accenture.flowershop.be.entity.Flower.Flower;
+import com.accenture.flowershop.be.entity.flower.Flower;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

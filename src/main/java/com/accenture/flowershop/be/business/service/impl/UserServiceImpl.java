@@ -1,15 +1,14 @@
 package com.accenture.flowershop.be.business.service.impl;
 
 import com.accenture.flowershop.be.business.service.UserMarshallingService;
-import com.accenture.flowershop.be.entity.User.User;
-import com.accenture.flowershop.be.entity.User.UserRole;
+import com.accenture.flowershop.be.entity.user.User;
+import com.accenture.flowershop.be.entity.user.UserRole;
 import com.accenture.flowershop.be.repos.UserRepo;
 import com.accenture.flowershop.be.business.service.UserService;
 import com.accenture.flowershop.be.util.JMS.UserDiscountMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

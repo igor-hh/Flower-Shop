@@ -2,8 +2,8 @@ package com.accenture.flowershop.be.business.service.impl;
 
 import com.accenture.flowershop.be.business.service.CartService;
 import com.accenture.flowershop.be.business.service.FlowerService;
-import com.accenture.flowershop.be.entity.Flower.Flower;
-import com.accenture.flowershop.be.entity.User.User;
+import com.accenture.flowershop.be.entity.flower.Flower;
+import com.accenture.flowershop.be.entity.user.User;
 import com.accenture.flowershop.be.entity.cart.Cart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

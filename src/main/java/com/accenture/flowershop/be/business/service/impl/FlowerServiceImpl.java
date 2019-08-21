@@ -1,7 +1,7 @@
 package com.accenture.flowershop.be.business.service.impl;
 
 import com.accenture.flowershop.be.business.service.FlowerService;
-import com.accenture.flowershop.be.entity.Flower.Flower;
+import com.accenture.flowershop.be.entity.flower.Flower;
 import com.accenture.flowershop.be.repos.FlowerRepo;
 import com.accenture.flowershop.be.util.Filter;
 import org.slf4j.Logger;

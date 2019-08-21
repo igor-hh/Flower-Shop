@@ -1,6 +1,6 @@
 package com.accenture.flowershop.be.business.service;
 
-import com.accenture.flowershop.be.entity.User.User;
+import com.accenture.flowershop.be.entity.user.User;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;

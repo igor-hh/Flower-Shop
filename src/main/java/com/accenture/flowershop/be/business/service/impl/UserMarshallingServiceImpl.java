@@ -1,7 +1,7 @@
 package com.accenture.flowershop.be.business.service.impl;
 
 import com.accenture.flowershop.be.business.service.UserMarshallingService;
-import com.accenture.flowershop.be.entity.User.User;
+import com.accenture.flowershop.be.entity.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

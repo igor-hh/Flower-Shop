@@ -1,4 +1,4 @@
-package com.accenture.flowershop.be.entity.User;
+package com.accenture.flowershop.be.entity.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

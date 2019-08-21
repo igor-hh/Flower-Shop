@@ -2,7 +2,7 @@ package com.accenture.flowershop.be.business.service.impl;
 
 import com.accenture.flowershop.be.business.service.FlowerService;
 import com.accenture.flowershop.be.business.service.FlowerStockWebService;
-import com.accenture.flowershop.be.entity.Flower.Flower;
+import com.accenture.flowershop.be.entity.flower.Flower;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

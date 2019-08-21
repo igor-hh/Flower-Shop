@@ -1,10 +1,7 @@
 package com.accenture.flowershop.be.business.service;
 
-import com.accenture.flowershop.be.entity.Order.Order;
-import com.accenture.flowershop.be.entity.Order.OrderItem;
-import com.accenture.flowershop.be.entity.User.User;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import com.accenture.flowershop.be.entity.order.Order;
+import com.accenture.flowershop.be.entity.user.User;
 
 import java.util.List;
 

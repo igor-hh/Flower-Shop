@@ -50,7 +50,7 @@
                     <p class="text-danger mt-3">${filterError}</p>
                 </c:when>
                 <c:otherwise>
-                    <table class="table table-hover">
+                    <table class="table table-hover mr-5">
                         <tr>
                             <th scope="col">Flower</th>
                             <th scope="col">Price per unit</th>

@@ -1,7 +1,7 @@
 package com.accenture.flowershop.be.util.JMS;
 
 import com.accenture.flowershop.be.business.service.UserService;
-import com.accenture.flowershop.be.entity.User.User;
+import com.accenture.flowershop.be.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
