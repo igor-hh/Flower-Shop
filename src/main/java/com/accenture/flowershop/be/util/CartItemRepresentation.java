@@ -1,4 +1,4 @@
-package com.accenture.flowershop.be.entity.cart;
+package com.accenture.flowershop.be.util;
 
 import java.math.BigDecimal;
 

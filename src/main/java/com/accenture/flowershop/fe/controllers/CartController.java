@@ -3,7 +3,7 @@ package com.accenture.flowershop.fe.controllers;
 import com.accenture.flowershop.be.business.service.CartService;
 import com.accenture.flowershop.be.business.service.FlowerService;
 import com.accenture.flowershop.be.entity.flower.Flower;
-import com.accenture.flowershop.be.entity.cart.CartItemRepresentation;
+import com.accenture.flowershop.be.util.CartItemRepresentation;
 import org.atteo.evo.inflector.English;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

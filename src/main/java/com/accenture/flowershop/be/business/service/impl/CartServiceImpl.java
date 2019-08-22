@@ -32,22 +32,23 @@ public class CartServiceImpl implements CartService {
     public Flower addFlower(Long flowerId, Integer quantity) throws Exception {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Flower flower = flowerService.findById(flowerId);
+        Map<Long, Integer> flowersInCart = cart.getFlowersInCart();
         if(flower == null || quantity <= 0) {
             throw new Exception("Flower not found.");
         }
         if (flower.getQuantity() < quantity) {
             throw new Exception("Not enough flowers on stock.");
         }
-        if (cart.getFlowersInCart().containsKey(flowerId) && (flower.getQuantity() < cart.getFlowersInCart().get(flowerId) + quantity)) {
+        if (flowersInCart.containsKey(flowerId) && (flower.getQuantity() < flowersInCart.get(flowerId) + quantity)) {
             throw new Exception("Not enough flower " +
                     flower.getName() +
                     " on stock. You already have " +
-                    cart.getFlowersInCart().get(flowerId) + " of that flower in your cart.");
+                    flowersInCart.get(flowerId) + " of that flower in your cart.");
         }
-        if(cart.getFlowersInCart().containsKey(flower.getId())) {
-            cart.getFlowersInCart().replace(flower.getId(), cart.getFlowersInCart().get(flower.getId()) + quantity);
+        if(flowersInCart.containsKey(flower.getId())) {
+            flowersInCart.replace(flower.getId(), flowersInCart.get(flower.getId()) + quantity);
         } else {
-            cart.getFlowersInCart().put(flower.getId(), quantity);
+            flowersInCart.put(flower.getId(), quantity);
         }
         logger.info("Added flower \"{}\" to user's \"{}\" cart, quantity: {}", flower.getName(), user.getLogin(), quantity);
         return flower;

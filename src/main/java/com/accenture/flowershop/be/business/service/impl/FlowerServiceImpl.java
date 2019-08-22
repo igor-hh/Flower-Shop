@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.apache.logging.log4j.util.Strings.isBlank;
 import static org.apache.logging.log4j.util.Strings.isNotBlank;
 
 @Service
@@ -54,7 +55,7 @@ public class FlowerServiceImpl implements FlowerService {
         if (filter.getPriceTo() == null) {
             filter.setPriceTo(new BigDecimal(Double.MAX_VALUE));
         }
-        if (!isNotBlank(filter.getFindString())) {
+        if (isBlank(filter.getFindString())) {
             flowers = flowerRepo.findByPriceBetweenOrderByNameAsc(filter.getPriceFrom(), filter.getPriceTo());
         } else {
             flowers = flowerRepo.findByNameIgnoreCaseContainingAndPriceBetweenOrderByNameAsc(filter.getFindString(), filter.getPriceFrom(), filter.getPriceTo());
